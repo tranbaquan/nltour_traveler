@@ -10,9 +10,10 @@ class NLTour extends StatelessWidget {
     return MaterialApp(
       title: 'NLTour',
       theme: ThemeData(
-        textSelectionColor: Colors.greenAccent,
-        cursorColor: Colors.greenAccent,
-        primaryColor: Colors.greenAccent,
+        textSelectionColor: Color(0xFF008fe5),
+        cursorColor: Color(0xFF008fe5),
+        primaryColor: Color(0xFF008fe5),
+        primaryColorDark: Colors.green
       ),
       home: LoginPage(),
     );
