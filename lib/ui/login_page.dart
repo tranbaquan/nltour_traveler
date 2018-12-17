@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/ui/home_page.dart';
-import 'package:nltour_traveler/ui/widget/nltour_widget.dart';
+import 'package:nltour_traveler/ui/widget/nl_button.dart';
+import 'package:nltour_traveler/ui/widget/nl_form.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -30,87 +31,54 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final usernameInput = TextFormField(
-      decoration: InputDecoration(
-        hintText: 'USERNAME',
-        hintStyle: TextStyle(
-          color: Color(0xFF008fe5),
-          fontSize: 14.0,
-        ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(
-                color: Colors.white30, width: 1.0, style: BorderStyle.solid)),
-      ),
-      textAlign: TextAlign.center,
+    final usernameInput = TextInputForm(
+      hintText: 'USERNAME',
     );
 
-    final passwordInput = TextFormField(
+    final passwordInput = TextInputForm(
       obscureText: true,
-      decoration: InputDecoration(
-        hintText: 'PASSWORD',
-        hintStyle: TextStyle(
-          color: Color(0xFF008fe5),
-          fontSize: 14.0,
-        ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(
-                color: Colors.white30, width: 1.0, style: BorderStyle.solid)),
-      ),
-      textAlign: TextAlign.center,
+      hintText: 'PASSWORD',
     );
 
     final forgotPasswordButton = ButtonTheme(
       minWidth: MediaQuery.of(context).size.width,
       height: 40.0,
-      child: RaisedButton(
-        color: Colors.transparent,
-        disabledColor: Colors.transparent,
+      child: FlatButton(
+        onPressed: () {},
         child: Text(
           'FORGOT PASSWORD',
           style: TextStyle(
-              color: Color(0xFF008fe5),
-              fontSize: 14.0,
-              fontWeight: FontWeight.w400,
-              fontStyle: FontStyle.normal),
+            color: Color(0xFF008fe5),
+          ),
         ),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
       ),
     );
 
-    final loginButton = Container(
-      padding: EdgeInsets.all(0.0),
-      margin: EdgeInsets.only(bottom: 5.0),
-      child: RaisedGradientRoundedButton(
-        child: Text(
-          'SIGNIN',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-        ),
-        gradient: LinearGradient(
-            colors: [Color(0xFF008fe5), Color(0xFF3eb43e)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
-        },
-        height: 40.0,
+    final loginButton = RaisedGradientRoundedButton(
+      child: Text(
+        'LOGIN',
+        style: TextStyle(color: Colors.white),
       ),
-    );
-
-    final registerButton = ButtonTheme(
-      minWidth: 250.0,
+      minWidth: MediaQuery.of(context).size.width,
       height: 40.0,
-      child: RaisedButton(
-        color: Colors.white,
-        disabledColor: Colors.white,
-        shape: OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFF008fe5), width: 1.0),
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-        child: Text(
-          'REGISTER',
-          style: TextStyle(color: Color(0xFF3eb43e)),
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      },
+    );
+
+    final registerButton = RaisedOutlineRoundedButton(
+      child: Text(
+        'REGISTER',
+        style: TextStyle(
+          color: Color(0xFF3eb43e),
         ),
       ),
+      height: 40.0,
+      minWidth: MediaQuery.of(context).size.width,
+      onPressed: () {},
     );
 
     final loginForm = Container(

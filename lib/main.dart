@@ -13,7 +13,8 @@ class NLTour extends StatelessWidget {
         textSelectionColor: Color(0xFF008fe5),
         cursorColor: Color(0xFF008fe5),
         primaryColor: Color(0xFF008fe5),
-        primaryColorDark: Colors.green
+        primaryColorDark: Colors.green,
+        fontFamily: 'SegoeUI'
       ),
       home: LoginPage(),
     );
