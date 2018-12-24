@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nltour_traveler/ui/login_page.dart';
+import 'package:nltour_traveler/routes.dart';
 
 void main() => runApp(NLTour());
 
@@ -16,7 +16,9 @@ class NLTour extends StatelessWidget {
         primaryColorDark: Colors.green,
         fontFamily: 'SegoeUI'
       ),
-      home: LoginPage(),
+//      home: LoginPage(),
+      initialRoute: '/',
+      routes: routes,
     );
   }
 }

@@ -1,0 +1,2 @@
+enum Gender { MALE, FEMALE }
+enum TourGuideType { PROFESSOR, FREELANCER, STUDENT, RESIDENT }

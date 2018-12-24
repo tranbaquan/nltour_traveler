@@ -65,11 +65,10 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Expanded(
-                child: Text(
-                  "Lorem ipsum",
-                ),
+              Text(
+                "Lorem ipsum",
               ),
               Text(
                 "see more",

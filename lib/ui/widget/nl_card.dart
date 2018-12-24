@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:datetime_picker_formfield/time_picker_formfield.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
-import 'package:nltour_traveler/ui/widget/nl_form.dart';
 
 class NLCard extends StatelessWidget {
   final String image;
@@ -97,7 +96,7 @@ class _NLCardFormState extends State<NLCardForm> {
     return Card(
       color: Colors.white,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           children: <Widget>[
             TextFormField(
@@ -105,22 +104,37 @@ class _NLCardFormState extends State<NLCardForm> {
                 hintText: 'Enter destination',
               ),
             ),
-            TimePickerFormField(
-              format: timeFormat,
-              decoration: InputDecoration(
-                hintText: '9:00 AM',
-              ),
-              initialValue: TimeOfDay(hour: 9, minute: 00),
-              onChanged: (t) => setState(() => time = t),
-            ),
-            DateTimePickerFormField(
-              format: dateFormat,
-              decoration: InputDecoration(
-                hintText: dateFormat.format(DateTime.now()),
-              ),
-              initialValue: DateTime.now(),
-              dateOnly: true,
-              onChanged: (dt) => setState(() => date = dt),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 120,
+                  child: TimePickerFormField(
+                    format: timeFormat,
+                    decoration: InputDecoration(
+                      hintText: '9:00 AM',
+                    ),
+                    onChanged: (t) => setState(() => time = t),
+                    editable: false,
+//                    resetIcon: null,
+                  ),
+                ),
+
+                Container(
+                  width: 150,
+                  child: DateTimePickerFormField(
+                    format: dateFormat,
+                    decoration: InputDecoration(
+                      hintText: dateFormat.format(DateTime.now()),
+                    ),
+                    dateOnly: true,
+                    editable: false,
+                    firstDate: DateTime.now(),
+                    onChanged: (dt) => setState(() => date = dt),
+//                    resetIcon: null,
+                  ),
+                ),
+              ],
             ),
             TextFormField(
               decoration: InputDecoration(

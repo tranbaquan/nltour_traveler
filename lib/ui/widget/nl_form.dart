@@ -5,19 +5,27 @@ class TextInputForm extends StatelessWidget {
   final bool obscureText;
   final double fontSize;
   final TextAlign textAlign;
+  final Function validator;
+  final TextInputType keyboardType;
+  final TextEditingController controller;
 
   const TextInputForm(
       {Key key,
       this.hintText,
       this.obscureText = false,
       this.fontSize = 14,
-      this.textAlign = TextAlign.center})
+      this.textAlign = TextAlign.center,
+      this.validator,
+      this.keyboardType,
+      this.controller})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       obscureText: obscureText,
+      validator: validator,
+      controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
