@@ -1,4 +1,3 @@
-import 'package:nltour_traveler/model/traveler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthState{ LOGGED_IN, LOGGED_OUT }

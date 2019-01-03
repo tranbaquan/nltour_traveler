@@ -12,6 +12,7 @@ class Collaborator {
   String personalID;
   String email;
   Gender gender;
+  String avatar;
   DateTime dob;
   Address address;
   Languages languages;
@@ -26,6 +27,7 @@ class Collaborator {
       this.personalID,
       this.email,
       this.gender,
+      this.avatar,
       this.dob,
       this.address,
       this.languages,
@@ -34,6 +36,8 @@ class Collaborator {
       this.type,
       this.phoneNumber});
 
-  factory Collaborator.fromJson(Map<String, dynamic> json) => _$CollaboratorFromJson(json);
+  factory Collaborator.fromJson(Map<String, dynamic> json) =>
+      _$CollaboratorFromJson(json);
+
   Map<String, dynamic> toJson() => _$CollaboratorToJson(this);
 }

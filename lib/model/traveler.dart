@@ -12,6 +12,7 @@ class Traveler {
   String personalID;
   String email;
   Gender gender;
+  String avatar;
   DateTime dob;
   Address address;
   Languages languages;
@@ -25,6 +26,7 @@ class Traveler {
       this.personalID,
       this.email,
       this.gender,
+      this.avatar,
       this.dob,
       this.address,
       this.languages,
@@ -32,7 +34,8 @@ class Traveler {
       this.activeDate,
       this.passport});
 
-  factory Traveler.fromJson(Map<String, dynamic> json) => _$TravelerFromJson(json);
+  factory Traveler.fromJson(Map<String, dynamic> json) =>
+      _$TravelerFromJson(json);
 
   Map<String, dynamic> toJson() => _$TravelerToJson(this);
 }

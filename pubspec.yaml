@@ -24,6 +24,12 @@ dependencies:
   email_validator: ^1.0.0
   http: ^0.12.0
   shared_preferences: ^0.4.3
+  firebase_core: ^0.2.5
+  firebase_analytics: ^1.0.4
+  cloud_firestore: ^0.8.2+3
+  firebase_storage: ^1.0.4
+  image_picker: ^0.4.10
+  flutter_typeahead: ^0.4.1
 
 dev_dependencies:
   flutter_test:

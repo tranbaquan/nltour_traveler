@@ -13,6 +13,7 @@ Traveler _$TravelerFromJson(Map<String, dynamic> json) {
       personalID: json['personalID'] as String,
       email: json['email'] as String,
       gender: _$enumDecodeNullable(_$GenderEnumMap, json['gender']),
+      avatar: json['avatar'] as String,
       dob: json['dob'] == null ? null : DateTime.parse(json['dob'] as String),
       address: json['address'] == null
           ? null
@@ -33,6 +34,7 @@ Map<String, dynamic> _$TravelerToJson(Traveler instance) => <String, dynamic>{
       'personalID': instance.personalID,
       'email': instance.email,
       'gender': _$GenderEnumMap[instance.gender],
+      'avatar': instance.avatar,
       'dob': instance.dob?.toIso8601String(),
       'address': instance.address,
       'languages': instance.languages,

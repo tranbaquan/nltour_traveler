@@ -16,7 +16,7 @@ class TextInputForm extends StatelessWidget {
       this.fontSize = 14,
       this.textAlign = TextAlign.center,
       this.validator,
-      this.keyboardType,
+      this.keyboardType = TextInputType.text,
       this.controller})
       : super(key: key);
 
@@ -38,6 +38,7 @@ class TextInputForm extends StatelessWidget {
         ),
       ),
       textAlign: textAlign,
+      keyboardType: keyboardType,
     );
   }
 }

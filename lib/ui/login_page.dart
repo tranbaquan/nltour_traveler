@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nltour_traveler/controller/login_page_controller.dart';
+import 'package:nltour_traveler/controller/traveler_controller.dart';
 import 'package:nltour_traveler/model/traveler.dart';
 import 'package:nltour_traveler/supporter/auth.dart';
 import 'package:nltour_traveler/supporter/validator.dart';
@@ -16,25 +16,14 @@ class LoginPage extends StatefulWidget {
   }
 }
 
-class _LoginPageState extends State<LoginPage> implements AuthStateListener  {
+class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   final _email = TextEditingController();
   final _password = TextEditingController();
   var authStateProvider = new AuthStateProvider();
 
-  _LoginPageState() {
-    authStateProvider.subscribe(this);
-  }
-
-//  @override
-//  void didChangeDependencies() {
-//    check();
-//    super.didChangeDependencies();
-//  }
-
   @override
-  void initState(){
+  void initState() {
     check();
     super.initState();
   }
@@ -42,12 +31,10 @@ class _LoginPageState extends State<LoginPage> implements AuthStateListener  {
   Future check() async {
     final prefs = await SharedPreferences.getInstance();
     bool isLogged = prefs.get('logged');
-    if(isLogged) {
+    if (isLogged != null && isLogged) {
       Navigator.of(context).pushReplacementNamed("/home");
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +125,11 @@ class _LoginPageState extends State<LoginPage> implements AuthStateListener  {
       minWidth: MediaQuery.of(context).size.width,
       height: 40.0,
       onPressed: () {
-        _login();
+        if (_formKey.currentState.validate()) {
+            _onLoading();
+            _login();
+
+        }
       },
     );
 
@@ -151,7 +142,9 @@ class _LoginPageState extends State<LoginPage> implements AuthStateListener  {
       ),
       height: 40.0,
       minWidth: MediaQuery.of(context).size.width,
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pushNamed('/register');
+      },
     );
 
     final loginForm = Container(
@@ -190,23 +183,53 @@ class _LoginPageState extends State<LoginPage> implements AuthStateListener  {
     final Traveler traveler =
         Traveler(email: _email.text, password: _password.text);
     print(json.encode(traveler));
-    var controller = LoginPageController();
-    final prefs = await SharedPreferences.getInstance();
+    var controller = TravellerController();
     controller.login(traveler).then((data) {
-      print(data);
+      Navigator.of(context).pop();
       if (data != null) {
-        prefs.setBool('logged', true);
-        prefs.setString('email', data.email);
-        authStateProvider.notify(AuthState.LOGGED_IN);
-        print('ok');
+        _saveUser(data);
+        Navigator.of(context).pushReplacementNamed("/home");
+      } else {
+        _showErrorMessage(context);
       }
     });
   }
 
-  @override
-  void onAuthStateChanged(AuthState state) {
-    if (state == AuthState.LOGGED_IN) {
-      Navigator.of(context).pushReplacementNamed("/home");
-    }
+  void _saveUser(dynamic data) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('logged', true);
+    prefs.setString('email', data.email);
+  }
+
+  _showErrorMessage(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Login Failed'),
+          content: Text('Email or password is incorrect!'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _onLoading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return new Center(
+          child: new CircularProgressIndicator(),
+        );
+      },
+    );
   }
 }

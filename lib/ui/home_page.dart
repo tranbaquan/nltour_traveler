@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nltour_traveler/controller/tour_controller.dart';
+import 'package:nltour_traveler/model/tour.dart';
+import 'package:nltour_traveler/ui/widget/menu_card.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_card.dart';
 
@@ -11,11 +14,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final String title;
-
   _HomePageState({this.title});
 
-  @override
-  Widget build(BuildContext context) {
+  PreferredSize buildAppBar(BuildContext context){
     final appBar = PreferredSize(
       preferredSize: Size(double.infinity, 100.0),
       child: Container(
@@ -45,11 +46,50 @@ class _HomePageState extends State<HomePage> {
             "NLTour",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
           centerTitle: true,
+
         ),
       ),
     );
+    return appBar;
+  }
+
+  List<Widget> getAllTour(){
+    var res = List<Widget>();
+    var tourController = TourController();
+    tourController.getAll().then((data) {
+      for(dynamic t in data) {
+        Tour tour = Tour.fromJson(t);
+        final card = NLCard(
+          image: 'assets/images/travel.jpg',
+          cardName: tour.place.name,
+          height: 200,
+          width: 150,
+          child: RaisedOutlineButton(
+            height: 25,
+            onPressed: () {},
+            child: Text(
+              'BOOK',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        );
+
+        res.add(card);
+      }
+
+      return res;
+    });
+
+
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     final widget1 = Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
@@ -104,6 +144,14 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[card, card, card, card],
       ),
     );
+//    final widget2 = Container(
+//      height: 200,
+//      padding: EdgeInsets.only(left: 16),
+//      child: ListView(
+//        scrollDirection: Axis.horizontal,
+//        children: getAllTour(),
+//      ),
+//    );
 
     final widget3 = Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
@@ -136,7 +184,10 @@ class _HomePageState extends State<HomePage> {
       child: NLCardForm(),
     );
     return Scaffold(
-      appBar: appBar,
+      appBar: buildAppBar(context),
+      drawer: Drawer(
+        child: MenuCard(),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -149,4 +200,5 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
 }
