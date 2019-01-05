@@ -36,7 +36,7 @@ class NLCard extends StatelessWidget {
               height: height,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
-                child: Image.asset(
+                child: Image.network(
                   image,
                   fit: BoxFit.cover,
                 ),

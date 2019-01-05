@@ -29,10 +29,7 @@ class CountryAutoComplete {
         List list = json.decode(response.body) as List;
         return list.map((m) {
           List l = json.decode(m['languages']) as List;
-          print(l);
-          print("LLL");
           List<LanguagesData> d = l.map((e) => e as LanguagesData).toList();
-          print(d);
           return d[0].name;
         }).toList();
       }

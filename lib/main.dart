@@ -15,7 +15,7 @@ class NLTour extends StatelessWidget {
         primaryColor: Color(0xFF008fe5),
         accentColor: Color(0xFF3eb43e),
         primaryColorDark: Colors.green,
-        fontFamily: 'SegoeUI'
+        fontFamily: 'Semilight'
       ),
 //      home: LoginPage(),
       initialRoute: '/',

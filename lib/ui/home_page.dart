@@ -14,9 +14,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final String title;
+
   _HomePageState({this.title});
 
-  PreferredSize buildAppBar(BuildContext context){
+  PreferredSize buildAppBar(BuildContext context) {
     final appBar = PreferredSize(
       preferredSize: Size(double.infinity, 100.0),
       child: Container(
@@ -47,55 +48,47 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-
         ),
       ),
     );
     return appBar;
   }
 
-  List<Widget> getAllTour(){
+  Future<List<Widget>> getAllTour() async {
     var res = List<Widget>();
     var tourController = TourController();
-    tourController.getAll().then((data) {
-      for(dynamic t in data) {
-        Tour tour = Tour.fromJson(t);
-        final card = NLCard(
-          image: 'assets/images/travel.jpg',
-          cardName: tour.place.name,
-          height: 200,
-          width: 150,
-          child: RaisedOutlineButton(
-            height: 25,
-            onPressed: () {},
-            child: Text(
-              'BOOK',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              ),
+    List<Tour> tours = await tourController.getAll();
+    for (Tour t in tours) {
+      final card = NLCard(
+        image: t.place.imageUrl,
+        cardName: t.place.name,
+        height: 200,
+        width: 150,
+        child: RaisedOutlineButton(
+          height: 25,
+          onPressed: () {},
+          child: Text(
+            'BOOK',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
             ),
           ),
-        );
-
-        res.add(card);
-      }
-
-      return res;
-    });
-
-
-
+        ),
+      );
+      res.add(card);
+    }
+    return res;
   }
 
   @override
   Widget build(BuildContext context) {
-
     final widget1 = Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
       child: Column(
         children: <Widget>[
           Container(
+            margin: EdgeInsets.only(top: 20),
             alignment: Alignment.centerLeft,
             child: Text(
               "Place of interest",
@@ -108,56 +101,53 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                "Lorem ipsum",
+                "Adventure is worthwhile",
               ),
-              Text(
-                "see more",
+              Container(
+                height: 12,
+                child: FlatButton(
+                  onPressed: (){},
+                  padding: EdgeInsets.zero,
+                  splashColor: Colors.transparent,
+                  child: Text(
+                    "see more >>",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.normal,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
               )
             ],
           )
         ],
       ),
     );
-    final card = NLCard(
-      image: 'assets/images/travel.jpg',
-      cardName: 'Ben Thanh market',
-      height: 200,
-      width: 150,
-      child: RaisedOutlineButton(
-        height: 25,
-        onPressed: () {},
-        child: Text(
-          'BOOK',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-          ),
-        ),
-      ),
-    );
 
     final widget2 = Container(
       height: 200,
       padding: EdgeInsets.only(left: 16),
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[card, card, card, card],
+      child: FutureBuilder(
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView(
+              scrollDirection: Axis.horizontal,
+              children: snapshot.data,
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+        },
+        future: getAllTour(),
       ),
     );
-//    final widget2 = Container(
-//      height: 200,
-//      padding: EdgeInsets.only(left: 16),
-//      child: ListView(
-//        scrollDirection: Axis.horizontal,
-//        children: getAllTour(),
-//      ),
-//    );
 
     final widget3 = Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
       child: Column(
         children: <Widget>[
           Container(
+            margin: EdgeInsets.only(top: 15),
             alignment: Alignment.centerLeft,
             child: Text(
               "Create your own tour",
@@ -170,7 +160,7 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  "Lorem ipsum",
+                  "Take only memories, leave only footprints",
                 ),
               ),
             ],
@@ -200,5 +190,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 }

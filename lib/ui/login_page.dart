@@ -69,8 +69,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
-            child: Image.asset(
-              'assets/images/travel.jpg',
+            child: Image.network(
+              'https://firebasestorage.googleapis.com/v0/b/nltour-2018.appspot.com/o/travel.jpg?alt=media&token=1effd6f7-0ac3-4b68-b758-48c4bcf71465',
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.cover,
               height: 240,
@@ -105,7 +105,9 @@ class _LoginPageState extends State<LoginPage> {
       minWidth: MediaQuery.of(context).size.width,
       height: 40.0,
       child: FlatButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed("/forgot");
+        },
         child: Text(
           'FORGOT PASSWORD',
           style: TextStyle(
@@ -195,10 +197,13 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void _saveUser(dynamic data) async {
+  void _saveUser(Traveler data) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('logged', true);
     prefs.setString('email', data.email);
+    prefs.setString('avatar', data.avatar);
+    prefs.setString('firstName', data.firstName);
+    prefs.setString('lastName', data.lastName);
   }
 
   _showErrorMessage(BuildContext context) {

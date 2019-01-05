@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:nltour_traveler/controller/traveler_controller.dart';
+import 'package:nltour_traveler/model/otp.dart';
 import 'package:nltour_traveler/supporter/validator.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_form.dart';
+import 'package:device_id/device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPage extends StatefulWidget {
   @override
@@ -12,16 +16,27 @@ class ForgotPage extends StatefulWidget {
 
 class ForgotPageState extends State<ForgotPage> {
   final _email = TextEditingController();
+  final _otpController = TextEditingController();
+  final GlobalKey<FormState> _getOTPKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _validateOTPKey = GlobalKey<FormState>();
+  bool isGotOTP = false;
+  OTP _otp;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context),
-      body: buildBody(context),
+      body: Container(
+        color: Colors.white,
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          child: buildBody(context),
+        ),
+      ),
     );
   }
 
-  PreferredSize buildAppBar(BuildContext context){
+  PreferredSize buildAppBar(BuildContext context) {
     final appBar = PreferredSize(
       preferredSize: Size(double.infinity, 100.0),
       child: Container(
@@ -52,7 +67,6 @@ class ForgotPageState extends State<ForgotPage> {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-
         ),
       ),
     );
@@ -60,29 +74,158 @@ class ForgotPageState extends State<ForgotPage> {
   }
 
   Widget buildBody(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            TextInputForm(
-              validator: Validator.validateEmail,
-              textAlign: TextAlign.left,
-              controller: _email,
-              hintText: "Enter your email",
-              keyboardType: TextInputType.emailAddress,
+    return !isGotOTP
+        ? Container(
+            padding: EdgeInsets.symmetric(vertical: 80, horizontal: 30),
+            child: Form(
+              autovalidate: true,
+              key: _getOTPKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  TextInputForm(
+                    validator: Validator.validateEmail,
+                    textAlign: TextAlign.left,
+                    controller: _email,
+                    hintText: "Enter your email",
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 16),
+                    child: RaisedGradientRoundedButton(
+                      child: Text("Send"),
+                      height: 40,
+                      minWidth: 250,
+                      onPressed: () {
+                        _onLoading();
+                        _getOTP();
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-            RaisedGradientRoundedButton(
-              child: Text("Send"),
-              height: 40,
-              minWidth: 250,
-              onPressed: () {
+          )
+        : Container(
+            padding: EdgeInsets.symmetric(vertical: 80, horizontal: 30),
+            child: Form(
+              autovalidate: true,
+              key: _validateOTPKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  TextInputForm(
+                    textAlign: TextAlign.left,
+                    controller: _otpController,
+                    hintText: "Enter your OTP",
+                    obscureText: true,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 16),
+                    child: RaisedGradientRoundedButton(
+                      child: Text(
+                        "Verify",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      height: 40,
+                      minWidth: 250,
+                      onPressed: () {
+                        _onLoading();
+                        _validateOTP();
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 16),
+                    child: RaisedGradientRoundedButton(
+                      child: Text(
+                        "Resend",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      height: 40,
+                      minWidth: 250,
+                      onPressed: () {
+                        _onLoading();
+                        setState(() {
+                          isGotOTP = false;
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+  }
 
+  void _onLoading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return new Center(
+          child: new CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  _showErrorMessage(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
               },
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
+  }
+
+  void _validateOTP() async {
+    var controller = TravellerController();
+    _otp.identifier = await DeviceId.getID;
+    final prefs = await SharedPreferences.getInstance();
+    controller.validateOTP(_otp).then((b) {
+      if (b) {
+        prefs.setString('email', _email.text);
+        Navigator.of(context).pushNamed('/changepass');
+      } else {
+        Navigator.of(context).pop();
+        _showErrorMessage(context, "Validate OTP Failed", "OTP is incorrect!");
+      }
+    });
+  }
+
+  void _getOTP() {
+    var controller = TravellerController();
+    controller.findByEmail(_email.text).then((data) {
+      if (data == null) {
+        Navigator.of(context).pop();
+        _showErrorMessage(context, "Get OTP Failed!", "Email is incorrect!");
+      } else {
+        controller.getOTP(_email.text, "Get OTP").then((otp) {
+          Navigator.of(context).pop();
+          _otp = otp;
+          setState(() {
+            isGotOTP = !isGotOTP;
+          });
+        });
+      }
+    });
   }
 }

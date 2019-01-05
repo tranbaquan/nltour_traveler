@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speech_bubble/speech_bubble.dart';
 
 class MenuCard extends StatefulWidget {
   @override
@@ -9,148 +10,9 @@ class MenuCard extends StatefulWidget {
 }
 
 class _MenuCardState extends State<MenuCard> {
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      height: MediaQuery
-          .of(context)
-          .size
-          .height,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          buildHeader(context),
-          buildOption(context),
-        ],
-      ),
-    );
-  }
-
-  Widget buildHeader(BuildContext context) {
-    var header = UserAccountsDrawerHeader(
-      accountEmail: Text('tranbaquan.tbq@gmail.com'),
-      accountName: Text('Trần Bá Quan'),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF008fe5), Color(0xFF3eb43e)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[500],
-            offset: Offset(0.0, 1.5),
-            blurRadius: 1.5,
-          ),
-        ],
-      ),
-      currentAccountPicture: CircleAvatar(
-        backgroundColor: Colors.green,
-      ),
-    );
-
-    var widget1 = Container(
-      padding: EdgeInsets.all(16),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(
-              Icons.brightness_1,
-              size: 120,
-              color: Colors.greenAccent,
-            ),
-            Text('Piper CJ'),
-            Text('Minisapolis'),
-          ],
-        ),
-      ),
-    );
-    var widget2 = Container(
-      padding: EdgeInsets.symmetric(horizontal: 32),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('17'),
-              Text('TRIPS'),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('17'),
-              Text('TRIPS'),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('12'),
-              Text('LOCATION'),
-            ],
-          ),
-        ],
-      ),
-    );
-
-    var widget3 = Container(
-      child: Column(
-        children: <Widget>[
-          widget1,
-          widget2,
-        ],
-      ),
-    );
-    var card = Container(
-      padding: EdgeInsets.all(16),
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF008fe5), Color(0xFF3eb43e)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[500],
-            offset: Offset(0.0, 1.5),
-            blurRadius: 1.5,
-          ),
-        ],
-      ),
-      child: Stack(
-        children: <Widget>[
-          widget3,
-          IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () {})
-        ],
-      ),
-    );
-    return card;
-  }
-
-  Widget buildOption(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        padding: EdgeInsets.all(16),
-        itemCount: choices.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(choices[index].title),
-            onTap: () {
-              onTap(index);
-            },
-          );
-        },
-      ),
-    );
+    return _buildProfileDrawer(context);
   }
 
   onTap(int index) {
@@ -171,6 +33,305 @@ class _MenuCardState extends State<MenuCard> {
     ];
     events[index].onTap(context);
   }
+
+  Drawer _buildProfileDrawer(context) {
+    return new Drawer(
+      child: new ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          Container(
+            height: 300,
+            child: new DrawerHeader(
+              child: new Container(
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      height: 84,
+                      width: 84,
+                      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(42),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x80000000),
+                            blurRadius: 4.0,
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(42),
+                        child: new Image.network(
+                          'https://firebasestorage.googleapis.com/v0/b/nltour-2018.appspot.com/o/travel.jpg?alt=media&token=1effd6f7-0ac3-4b68-b758-48c4bcf71465',
+                          fit: BoxFit.cover,
+                          height: 84,
+                          width: 84,
+                        ),
+                      ),
+                    ),
+                    new Text(
+                      'Dinh Chi Thien',
+                      style: new TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Normal',
+                      ),
+                    ),
+                    new Text(
+                      'Ho Chi Minh City',
+                      style: new TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontFamily: 'Semilight',
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 18, horizontal: 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                '17',
+                                style: TextStyle(
+                                    fontFamily: 'Semilight',
+                                    fontSize: 20,
+                                    color: Colors.white),
+                              ),
+                              Text(
+                                'TRIPS',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontFamily: 'Semilight',
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                '2',
+                                style: TextStyle(
+                                    fontFamily: 'Semilight',
+                                    fontSize: 20,
+                                    color: Colors.white),
+                              ),
+                              Text(
+                                'PENDING TOURS',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontFamily: 'Semilight',
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                '9',
+                                style: TextStyle(
+                                    fontFamily: 'Semilight',
+                                    fontSize: 20,
+                                    color: Colors.white),
+                              ),
+                              Text(
+                                'RATING',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontFamily: 'Semilight',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              decoration: new BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0x00ff008fe5),
+                      Color(0x00ff3eb43e),
+                    ],
+                    begin: FractionalOffset.topLeft,
+                    end: FractionalOffset.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey[500],
+                        offset: Offset(0, 1.5),
+                        blurRadius: 1.5)
+                  ]),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  child: GestureDetector(
+                    child: Text(
+                      'Home',
+                      style: TextStyle(
+                        color: Color(0x00ff444444),
+                        fontFamily: 'Semilight',
+                        fontSize: 14,
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+                ),
+                new Divider(
+                  color: Color(0x00ffcfcfcf),
+                  indent: 0.0,
+                ),
+                Container(
+                  child: GestureDetector(
+                    child: Text(
+                      'Update information',
+                      style: TextStyle(
+                        color: Color(0x00ff444444),
+                        fontFamily: 'Semilight',
+                        fontSize: 14,
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+                ),
+                new Divider(
+                  color: Color(0x00ffcfcfcf),
+                  indent: 0.0,
+                ),
+                Container(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: GestureDetector(
+                          child: Text(
+                            'Payment',
+                            style: TextStyle(
+                              color: Color(0x00ff444444),
+                              fontFamily: 'Semilight',
+                              fontSize: 14,
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      SpeechBubble(
+                        nipLocation: NipLocation.LEFT,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              "1",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 7.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+                ),
+                new Divider(
+                  color: Color(0x00ffcfcfcf),
+                  indent: 0.0,
+                ),
+                Container(
+                  child: GestureDetector(
+                    child: Text(
+                      'View history',
+                      style: TextStyle(
+                        color: Color(0x00ff444444),
+                        fontFamily: 'Semilight',
+                        fontSize: 14,
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+                ),
+                new Divider(
+                  color: Color(0x00ffcfcfcf),
+                  indent: 0.0,
+                ),
+                Container(
+                  child: GestureDetector(
+                    child: Text(
+                      'Privacy Policy | Term of Use',
+                      style: TextStyle(
+                        color: Color(0x00ff444444),
+                        fontFamily: 'Semilight',
+                        fontSize: 14,
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+                ),
+                new Divider(
+                  color: Color(0x00ffcfcfcf),
+                  indent: 0.0,
+                ),
+                Container(
+                  child: GestureDetector(
+                    child: Text(
+                      'Sign out',
+                      style: TextStyle(
+                        color: Color(0x00ff444444),
+                        fontFamily: 'Semilight',
+                        fontSize: 14,
+                      ),
+                    ),
+                    onTap: () {
+                      onTap(5);
+                    },
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
 
 class Choice {
@@ -180,10 +341,10 @@ class Choice {
 }
 
 const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Update Information'),
-  const Choice(title: 'Tour is waiting'),
+  const Choice(title: 'Home'),
+  const Choice(title: 'Update information'),
   const Choice(title: 'Payment'),
-  const Choice(title: 'View History'),
+  const Choice(title: 'View history'),
   const Choice(title: 'Privacy Policy | Term of Use'),
   const Choice(title: 'Sign Out'),
 ];
@@ -193,3 +354,4 @@ class ChoiceEvent {
 
   ChoiceEvent({this.onTap});
 }
+

@@ -448,6 +448,9 @@ class RegisterPageState extends State<RegisterPage> {
     controller.create(traveler).then((data) {
       prefs.setBool('logged', true);
       prefs.setString('email', data.email);
+      prefs.setString('avatar', data.avatar);
+      prefs.setString('firstName', data.firstName);
+      prefs.setString('lastName', data.lastName);
       Navigator.of(context).pushReplacementNamed('/');
     });
   }
