@@ -1,7 +1,9 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:datetime_picker_formfield/time_picker_formfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
+import 'package:nltour_traveler/controller/place_controller.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 
 class NLCard extends StatelessWidget {
@@ -78,6 +80,69 @@ class NLCard extends StatelessWidget {
   }
 }
 
+class NLCardExpand extends StatelessWidget {
+  final String image;
+  final Widget child;
+
+  const NLCardExpand(
+      {Key key, this.image, this.child})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final widget = Container(
+      height: 150,
+      padding: EdgeInsets.zero,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[500],
+            offset: Offset(0.0, 1.5),
+            blurRadius: 1.5,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: 150,
+            height: 150,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[500],
+                  offset: Offset(1.5, 0),
+                  blurRadius: 1.5,
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
+                image,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: child,
+            ),
+          )
+        ],
+      ),
+    );
+    return widget;
+  }
+}
+
 class NLCardForm extends StatefulWidget {
   @override
   _NLCardFormState createState() {
@@ -90,6 +155,7 @@ class _NLCardFormState extends State<NLCardForm> {
   final timeFormat = DateFormat('hh:mm a');
   DateTime date;
   TimeOfDay time;
+  final _place = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +165,29 @@ class _NLCardFormState extends State<NLCardForm> {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Enter destination',
+            TypeAheadField(
+              textFieldConfiguration: TextFieldConfiguration(
+                decoration: InputDecoration(
+                  hintText: 'Enter destination',
+                ),
+                controller: _place,
               ),
+              suggestionsCallback: (pattern) async {
+                var placeController = PlaceController();
+                return await placeController.findByName(pattern);
+              },
+              itemBuilder: (context, suggestion) {
+                return ListTile(
+                  title: Text(suggestion),
+                );
+              },
+              transitionBuilder: (context, suggestionsBox, controller) {
+                return suggestionsBox;
+              },
+              onSuggestionSelected: (suggestion) {
+                _place.text = suggestion;
+              },
+
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,10 +201,8 @@ class _NLCardFormState extends State<NLCardForm> {
                     ),
                     onChanged: (t) => setState(() => time = t),
                     editable: false,
-//                    resetIcon: null,
                   ),
                 ),
-
                 Container(
                   width: 150,
                   child: DateTimePickerFormField(
@@ -131,7 +214,6 @@ class _NLCardFormState extends State<NLCardForm> {
                     editable: false,
                     firstDate: DateTime.now(),
                     onChanged: (dt) => setState(() => date = dt),
-//                    resetIcon: null,
                   ),
                 ),
               ],

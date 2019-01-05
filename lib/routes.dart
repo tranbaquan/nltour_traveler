@@ -3,6 +3,7 @@ import 'package:nltour_traveler/ui/change_pass_page.dart';
 import 'package:nltour_traveler/ui/forgot_page.dart';
 import 'package:nltour_traveler/ui/home_page.dart';
 import 'package:nltour_traveler/ui/login_page.dart';
+import 'package:nltour_traveler/ui/place_page.dart';
 import 'package:nltour_traveler/ui/register_page.dart';
 
 final routes = {
@@ -12,4 +13,5 @@ final routes = {
   '/register': (BuildContext context) => new RegisterPage(),
   '/forgot': (BuildContext context) => new ForgotPage(),
   '/changepass': (BuildContext context) => new ChangePassPage(),
+  '/place': (BuildContext context) => new PlacePage(),
 };

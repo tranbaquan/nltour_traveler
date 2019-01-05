@@ -1,36 +1,37 @@
-import 'package:nltour_traveler/model/tour.dart';
 import 'package:http/http.dart' as http;
+import 'package:nltour_traveler/model/place.dart';
 import 'package:nltour_traveler/network/host.dart';
 import 'dart:convert';
 
-class TourController {
-  Future<List<Tour>> getAll() async {
+class PlaceController {
+  Future<List<Place>> getAll() async {
     final client = http.Client();
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
     };
-    return await client.get(Hosting.getAllTours, headers: headers).then((response) {
+    return await client.get(Hosting.getAllPlaces, headers: headers).then((response) {
       if (response.statusCode < 200 && response.statusCode >= 400) {
         return null;
       } else {
         List list = json.decode(response.body) as List;
-        return list.map((m) => Tour.fromJson(json.decode(json.encode(m)))).toList();
+        return list.map((m) => Place.fromJson(json.decode(json.encode(m)))).toList();
       }
     });
   }
 
-  Future<Tour> createTour(Tour tour) async {
+  Future<List<Place>> findByName(String name) async {
     final client = http.Client();
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
     };
-    return await client.post(Hosting.tour, headers: headers, body: json.encode(tour)).then((response) {
+    return await client.get(Hosting.getAllPlaces, headers: headers).then((response) {
       if (response.statusCode < 200 && response.statusCode >= 400) {
         return null;
       } else {
-        return Tour.fromJson(json.decode(response.body));
+        List list = json.decode(response.body) as List;
+        return list.map((m) => Place.fromJson(json.decode(json.encode(m)))).toList();
       }
     });
   }

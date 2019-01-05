@@ -106,7 +106,9 @@ class _HomePageState extends State<HomePage> {
               Container(
                 height: 12,
                 child: FlatButton(
-                  onPressed: (){},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/place');
+                  },
                   padding: EdgeInsets.zero,
                   splashColor: Colors.transparent,
                   child: Text(

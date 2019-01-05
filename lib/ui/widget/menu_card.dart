@@ -10,6 +10,7 @@ class MenuCard extends StatefulWidget {
 }
 
 class _MenuCardState extends State<MenuCard> {
+
   @override
   Widget build(BuildContext context) {
     return _buildProfileDrawer(context);
@@ -24,7 +25,7 @@ class _MenuCardState extends State<MenuCard> {
       ChoiceEvent(onTap: (BuildContext context) {}),
       ChoiceEvent(onTap: (BuildContext context) async {
         final prefs = await SharedPreferences.getInstance();
-        prefs.setBool('logged', false).then((isCleared) {
+        prefs.clear().then((isCleared) {
           if (isCleared) {
             Navigator.of(context).pushReplacementNamed('/');
           }
@@ -34,141 +35,174 @@ class _MenuCardState extends State<MenuCard> {
     events[index].onTap(context);
   }
 
+  Future<String> getInfo(String type) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(type);
+  }
+
   Drawer _buildProfileDrawer(context) {
     return new Drawer(
       child: new ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           Container(
-            height: 300,
-            child: new DrawerHeader(
-              child: new Container(
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      height: 84,
-                      width: 84,
-                      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(42),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0x80000000),
-                            blurRadius: 4.0,
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(42),
-                        child: new Image.network(
-                          'https://firebasestorage.googleapis.com/v0/b/nltour-2018.appspot.com/o/travel.jpg?alt=media&token=1effd6f7-0ac3-4b68-b758-48c4bcf71465',
-                          fit: BoxFit.cover,
-                          height: 84,
-                          width: 84,
-                        ),
-                      ),
-                    ),
-                    new Text(
-                      'Dinh Chi Thien',
-                      style: new TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Normal',
-                      ),
-                    ),
-                    new Text(
-                      'Ho Chi Minh City',
-                      style: new TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontFamily: 'Semilight',
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 18, horizontal: 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                '17',
-                                style: TextStyle(
-                                    fontFamily: 'Semilight',
-                                    fontSize: 20,
-                                    color: Colors.white),
-                              ),
-                              Text(
-                                'TRIPS',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontFamily: 'Semilight',
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                '2',
-                                style: TextStyle(
-                                    fontFamily: 'Semilight',
-                                    fontSize: 20,
-                                    color: Colors.white),
-                              ),
-                              Text(
-                                'PENDING TOURS',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontFamily: 'Semilight',
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                '9',
-                                style: TextStyle(
-                                    fontFamily: 'Semilight',
-                                    fontSize: 20,
-                                    color: Colors.white),
-                              ),
-                              Text(
-                                'RATING',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontFamily: 'Semilight',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+            decoration: new BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0x00ff008fe5),
+                    Color(0x00ff3eb43e),
                   ],
+                  begin: FractionalOffset.topLeft,
+                  end: FractionalOffset.bottomRight,
                 ),
-              ),
-              decoration: new BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0x00ff008fe5),
-                      Color(0x00ff3eb43e),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey[500],
+                      offset: Offset(0, 1.5),
+                      blurRadius: 1.5)
+                ]),
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  height: 84,
+                  width: 84,
+                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(42),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0x80000000),
+                        blurRadius: 4.0,
+                      ),
                     ],
-                    begin: FractionalOffset.topLeft,
-                    end: FractionalOffset.bottomRight,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey[500],
-                        offset: Offset(0, 1.5),
-                        blurRadius: 1.5)
-                  ]),
+                  child: FutureBuilder(
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(42),
+                          child: new Image.network(
+                            snapshot.data,
+                            fit: BoxFit.cover,
+                            height: 84,
+                            width: 84,
+                          ),
+                        );
+                      } else {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(42),
+                          child: new Image.network(
+                            'https://firebasestorage.googleapis.com/v0/b/nltour-2018.appspot.com/o/travel.jpg?alt=media&token=1effd6f7-0ac3-4b68-b758-48c4bcf71465',
+                            fit: BoxFit.cover,
+                            height: 84,
+                            width: 84,
+                          ),
+                        );
+                      }
+                    },
+                    future: getInfo('avatar'),
+                  ),
+                ),
+                FutureBuilder(
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        snapshot.data,
+                        style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Normal',
+                        ),
+                      );
+                    } else {
+                      return Text(
+                        'Loading...',
+                        style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Normal',
+                        ),
+                      );
+                    }
+                  },
+                  future: getInfo('firstName'),
+                ),
+                new Text(
+                  'Ho Chi Minh City',
+                  style: new TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontFamily: 'Semilight',
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 18, horizontal: 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            '17',
+                            style: TextStyle(
+                                fontFamily: 'Semilight',
+                                fontSize: 20,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            'TRIPS',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontFamily: 'Semilight',
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            '2',
+                            style: TextStyle(
+                                fontFamily: 'Semilight',
+                                fontSize: 20,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            'PENDING TOURS',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontFamily: 'Semilight',
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            '9',
+                            style: TextStyle(
+                                fontFamily: 'Semilight',
+                                fontSize: 20,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            'RATING',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontFamily: 'Semilight',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
@@ -188,8 +222,7 @@ class _MenuCardState extends State<MenuCard> {
                       ),
                     ),
                     onTap: () {
-                      setState(() {
-                      });
+                      setState(() {});
                       Navigator.pop(context);
                     },
                   ),
@@ -210,8 +243,7 @@ class _MenuCardState extends State<MenuCard> {
                       ),
                     ),
                     onTap: () {
-                      setState(() {
-                      });
+                      setState(() {});
                       Navigator.pop(context);
                     },
                   ),
@@ -235,8 +267,7 @@ class _MenuCardState extends State<MenuCard> {
                             ),
                           ),
                           onTap: () {
-                            setState(() {
-                            });
+                            setState(() {});
                             Navigator.pop(context);
                           },
                         ),
@@ -275,8 +306,7 @@ class _MenuCardState extends State<MenuCard> {
                       ),
                     ),
                     onTap: () {
-                      setState(() {
-                      });
+                      setState(() {});
                       Navigator.pop(context);
                     },
                   ),
@@ -297,8 +327,7 @@ class _MenuCardState extends State<MenuCard> {
                       ),
                     ),
                     onTap: () {
-                      setState(() {
-                      });
+                      setState(() {});
                       Navigator.pop(context);
                     },
                   ),
@@ -331,7 +360,6 @@ class _MenuCardState extends State<MenuCard> {
       ),
     );
   }
-
 }
 
 class Choice {
@@ -354,4 +382,3 @@ class ChoiceEvent {
 
   ChoiceEvent({this.onTap});
 }
-
