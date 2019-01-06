@@ -7,6 +7,7 @@ import 'package:nltour_traveler/supporter/auth.dart';
 import 'package:nltour_traveler/supporter/validator.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_form.dart';
+import 'package:nltour_traveler/utils/dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -128,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
       height: 40.0,
       onPressed: () {
         if (_formKey.currentState.validate()) {
-            _onLoading();
+            NLDialog.showLoading(context);
             _login();
 
         }
@@ -192,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
         _saveUser(data);
         Navigator.of(context).pushReplacementNamed("/home");
       } else {
-        _showErrorMessage(context);
+        NLDialog.showInfo(context, 'Login Failed', 'Email or password is incorrect!');
       }
     });
   }
@@ -204,37 +205,5 @@ class _LoginPageState extends State<LoginPage> {
     prefs.setString('avatar', data.avatar);
     prefs.setString('firstName', data.firstName);
     prefs.setString('lastName', data.lastName);
-  }
-
-  _showErrorMessage(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login Failed'),
-          content: Text('Email or password is incorrect!'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _onLoading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return new Center(
-          child: new CircularProgressIndicator(),
-        );
-      },
-    );
   }
 }

@@ -26,8 +26,7 @@ class PlaceController {
       'Content-type': 'application/json',
       'Accept': 'application/json',
     };
-    return await client.get(Hosting.getAllPlaces, headers: headers).then((response) {
-//    return await client.get(Hosting.getPlacesByName + name, headers: headers).then((response) {
+    return await client.get(Hosting.getPlacesByName + name, headers: headers).then((response) {
       if (response.statusCode < 200 && response.statusCode >= 400) {
         return null;
       } else {

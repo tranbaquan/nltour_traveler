@@ -1,10 +1,11 @@
+import 'package:device_id/device_id.dart';
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
 import 'package:nltour_traveler/model/otp.dart';
 import 'package:nltour_traveler/supporter/validator.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_form.dart';
-import 'package:device_id/device_id.dart';
+import 'package:nltour_traveler/utils/dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPage extends StatefulWidget {
@@ -98,7 +99,7 @@ class ForgotPageState extends State<ForgotPage> {
                       height: 40,
                       minWidth: 250,
                       onPressed: () {
-                        _onLoading();
+                        NLDialog.showLoading(context);
                         _getOTP();
                       },
                     ),
@@ -134,7 +135,7 @@ class ForgotPageState extends State<ForgotPage> {
                       height: 40,
                       minWidth: 250,
                       onPressed: () {
-                        _onLoading();
+                        NLDialog.showLoading(context);
                         _validateOTP();
                       },
                     ),
@@ -151,7 +152,7 @@ class ForgotPageState extends State<ForgotPage> {
                       height: 40,
                       minWidth: 250,
                       onPressed: () {
-                        _onLoading();
+                        NLDialog.showLoading(context);
                         setState(() {
                           isGotOTP = false;
                         });
@@ -164,37 +165,6 @@ class ForgotPageState extends State<ForgotPage> {
           );
   }
 
-  void _onLoading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return new Center(
-          child: new CircularProgressIndicator(),
-        );
-      },
-    );
-  }
-
-  _showErrorMessage(BuildContext context, String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   void _validateOTP() async {
     var controller = TravellerController();
@@ -206,7 +176,7 @@ class ForgotPageState extends State<ForgotPage> {
         Navigator.of(context).pushNamed('/changepass');
       } else {
         Navigator.of(context).pop();
-        _showErrorMessage(context, "Validate OTP Failed", "OTP is incorrect!");
+        NLDialog.showInfo(context, "Validate OTP Failed", "OTP is incorrect!");
       }
     });
   }
@@ -216,7 +186,7 @@ class ForgotPageState extends State<ForgotPage> {
     controller.findByEmail(_email.text).then((data) {
       if (data == null) {
         Navigator.of(context).pop();
-        _showErrorMessage(context, "Get OTP Failed!", "Email is incorrect!");
+        NLDialog.showInfo(context, "Get OTP Failed!", "Email is incorrect!");
       } else {
         controller.getOTP(_email.text, "Get OTP").then((otp) {
           Navigator.of(context).pop();

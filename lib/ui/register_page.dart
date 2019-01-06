@@ -14,6 +14,7 @@ import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_form.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:nltour_traveler/utils/dialog.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -346,7 +347,7 @@ class RegisterPageState extends State<RegisterPage> {
         if (Validator.validateEmail(_email.text) != null) {
           return null;
         } else {
-          _onLoading();
+          NLDialog.showLoading(context);
           await controller.findByEmail(_email.text).then((t) {
             if (t == null) {
               Navigator.of(context).pop();
@@ -371,7 +372,7 @@ class RegisterPageState extends State<RegisterPage> {
         }
         break;
       case 2:
-        _onLoading();
+        NLDialog.showLoading(context);
         if (_firstName.text == null ||
             _firstName.text.isEmpty ||
             _lastName.text == null ||
@@ -402,7 +403,7 @@ class RegisterPageState extends State<RegisterPage> {
         if (_image == null) {
           return null;
         } else {
-          _onLoading();
+          NLDialog.showLoading(context);
           final StorageReference storage = FirebaseStorage.instance
               .ref()
               .child('photos')
@@ -422,17 +423,6 @@ class RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void _onLoading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return new Center(
-          child: new CircularProgressIndicator(),
-        );
-      },
-    );
-  }
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/place_controller.dart';
+import 'package:nltour_traveler/controller/tour_controller.dart';
+import 'package:nltour_traveler/controller/traveler_controller.dart';
 import 'package:nltour_traveler/model/place.dart';
-import 'package:nltour_traveler/ui/widget/menu_card.dart';
+import 'package:nltour_traveler/model/tour.dart';
+import 'package:nltour_traveler/model/traveler.dart';
+import 'package:nltour_traveler/ui/widget/nl_menu_card.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -59,22 +64,10 @@ class _HomePageState extends State<HomePage> {
     var placeController = PlaceController();
     List<Place> places = await placeController.getAll();
     for (Place place in places) {
-      final card = NLCard(
-        image: place.imageUrl,
-        cardName: place.name,
+      final card = NLPlaceCard(
+        place: place,
         height: 200,
         width: 150,
-        child: RaisedOutlineButton(
-          height: 25,
-          onPressed: () {},
-          child: Text(
-            'BOOK',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
-          ),
-        ),
       );
       res.add(card);
     }
@@ -192,4 +185,24 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Future<Tour> bookATour(DateTime date, TimeOfDay time, Place place) async {
+    var tour = Tour();
+    DateTime m =
+        DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    tour.startDate = m;
+    tour.place = place;
+    final prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('email');
+    var travelerController = TravellerController();
+    Traveler traveler = await travelerController.findByEmail(email);
+    tour.traveler = traveler;
+    tour.tourGuide = null;
+    tour.isAccepted = false;
+
+    var tourController = TourController();
+    Tour t = await tourController.createTour(tour);
+    return t;
+  }
+
 }

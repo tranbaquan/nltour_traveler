@@ -4,6 +4,7 @@ import 'package:nltour_traveler/controller/traveler_controller.dart';
 import 'package:nltour_traveler/supporter/validator.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_form.dart';
+import 'package:nltour_traveler/utils/dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChangePassPage extends StatefulWidget {
@@ -65,7 +66,7 @@ class ChangePassPageState extends State<ChangePassPage> {
                       height: 40,
                       minWidth: 250,
                       onPressed: () {
-                        _onLoading();
+                        NLDialog.showLoading(context);
                         _changePass();
                       },
                     ),
@@ -116,18 +117,6 @@ class ChangePassPageState extends State<ChangePassPage> {
     return appBar;
   }
 
-  void _onLoading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return new Center(
-          child: new CircularProgressIndicator(),
-        );
-      },
-    );
-  }
-
   void _changePass() async {
     var controller = TravellerController();
     var deviceInfo = await DeviceId.getID;
@@ -136,8 +125,7 @@ class ChangePassPageState extends State<ChangePassPage> {
     controller.changePassword(email, _pass.text, deviceInfo).then((data) {
       if (data == null) {
         Navigator.of(context).pop();
-        _showErrorMessage(
-            context, "Change Password Failed", "Please check your network");
+        NLDialog.showInfo(context, "Change Password Failed", "Please check your network");
       } else {
         prefs.setBool('logged', true);
         prefs.setString('avatar', data.avatar);
@@ -146,25 +134,5 @@ class ChangePassPageState extends State<ChangePassPage> {
         Navigator.of(context).pushReplacementNamed('/home');
       }
     });
-  }
-
-  _showErrorMessage(BuildContext context, String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }

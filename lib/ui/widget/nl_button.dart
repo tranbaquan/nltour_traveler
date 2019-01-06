@@ -227,3 +227,53 @@ class SimpleRoundButton extends StatelessWidget {
     );
   }
 }
+
+class RadioItemButton extends StatelessWidget {
+  final RadioModel _item;
+
+  RadioItemButton(this._item);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      child: new Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          new Container(
+            margin: EdgeInsets.fromLTRB(0, 5, 20, 5),
+            height: 30,
+            width: 70.0,
+            child: new Center(
+              child: new Text(_item.buttonText,
+                style: new TextStyle(
+                    color:
+                    _item.isSelected ? Colors.white : Color(0x80000000),
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w300),
+
+              ),
+            ),
+            decoration: new BoxDecoration(
+              color: _item.isSelected
+                  ? Color(0xff008fe5)
+                  : Colors.transparent,
+              border: new Border.all(
+                  width: 1.0,
+                  color: _item.isSelected
+                      ? Color(0xff008fe5)
+                      : Colors.grey),
+              borderRadius: const BorderRadius.all(const Radius.circular(4.0)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RadioModel {
+  bool isSelected;
+  final String buttonText;
+
+  RadioModel(this.isSelected, this.buttonText);
+}

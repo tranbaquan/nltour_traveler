@@ -18,10 +18,18 @@ class _MenuCardState extends State<MenuCard> {
 
   onTap(int index) {
     List<ChoiceEvent> events = <ChoiceEvent>[
-      ChoiceEvent(onTap: (BuildContext context) {}),
-      ChoiceEvent(onTap: (BuildContext context) {}),
-      ChoiceEvent(onTap: (BuildContext context) {}),
-      ChoiceEvent(onTap: (BuildContext context) {}),
+      ChoiceEvent(onTap: (BuildContext context) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      }),
+      ChoiceEvent(onTap: (BuildContext context) {
+        Navigator.of(context).pushReplacementNamed('/info');
+      }),
+      ChoiceEvent(onTap: (BuildContext context) {
+        Navigator.of(context).pushReplacementNamed('/payment');
+      }),
+      ChoiceEvent(onTap: (BuildContext context) {
+        Navigator.of(context).pushReplacementNamed('/history');
+      }),
       ChoiceEvent(onTap: (BuildContext context) {}),
       ChoiceEvent(onTap: (BuildContext context) async {
         final prefs = await SharedPreferences.getInstance();
@@ -222,8 +230,7 @@ class _MenuCardState extends State<MenuCard> {
                       ),
                     ),
                     onTap: () {
-                      setState(() {});
-                      Navigator.pop(context);
+                      onTap(0);
                     },
                   ),
                   margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
@@ -243,8 +250,7 @@ class _MenuCardState extends State<MenuCard> {
                       ),
                     ),
                     onTap: () {
-                      setState(() {});
-                      Navigator.pop(context);
+                      onTap(1);
                     },
                   ),
                   margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
@@ -267,8 +273,7 @@ class _MenuCardState extends State<MenuCard> {
                             ),
                           ),
                           onTap: () {
-                            setState(() {});
-                            Navigator.pop(context);
+                            onTap(2);
                           },
                         ),
                       ),
@@ -306,8 +311,7 @@ class _MenuCardState extends State<MenuCard> {
                       ),
                     ),
                     onTap: () {
-                      setState(() {});
-                      Navigator.pop(context);
+                      onTap(3);
                     },
                   ),
                   margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
@@ -327,8 +331,7 @@ class _MenuCardState extends State<MenuCard> {
                       ),
                     ),
                     onTap: () {
-                      setState(() {});
-                      Navigator.pop(context);
+                      onTap(4);
                     },
                   ),
                   margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),

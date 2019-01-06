@@ -13,6 +13,7 @@ class Tour {
   Collaborator tourGuide;
   DateTime startDate;
   double price;
+  bool isAccepted;
 
   Tour(
       {this.id,
@@ -20,7 +21,8 @@ class Tour {
       this.traveler,
       this.tourGuide,
       this.startDate,
-      this.price});
+      this.price,
+      this.isAccepted});
 
   factory Tour.fromJson(Map<String, dynamic> json) => _$TourFromJson(json);
 

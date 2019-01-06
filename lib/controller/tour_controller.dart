@@ -34,4 +34,21 @@ class TourController {
       }
     });
   }
+
+  Future<List<Tour>> getMyTour(String email) async {
+    final client = http.Client();
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'email' : email,
+    };
+    return await client.get(Hosting.getMyTours, headers: headers).then((response) {
+      if (response.statusCode < 200 && response.statusCode >= 400) {
+        return null;
+      } else {
+        List list = json.decode(response.body) as List;
+        return list.map((m) => Tour.fromJson(json.decode(json.encode(m)))).toList();
+      }
+    });
+  }
 }
