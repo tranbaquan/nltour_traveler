@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nltour_traveler/controller/tour_controller.dart';
-import 'package:nltour_traveler/model/tour.dart';
+import 'package:nltour_traveler/controller/place_controller.dart';
+import 'package:nltour_traveler/model/place.dart';
 import 'package:nltour_traveler/ui/widget/menu_card.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_card.dart';
@@ -54,14 +54,14 @@ class _HomePageState extends State<HomePage> {
     return appBar;
   }
 
-  Future<List<Widget>> getAllTour() async {
+  Future<List<Widget>> getPlaceTour() async {
     var res = List<Widget>();
-    var tourController = TourController();
-    List<Tour> tours = await tourController.getAll();
-    for (Tour t in tours) {
+    var placeController = PlaceController();
+    List<Place> places = await placeController.getAll();
+    for (Place place in places) {
       final card = NLCard(
-        image: t.place.imageUrl,
-        cardName: t.place.name,
+        image: place.imageUrl,
+        cardName: place.name,
         height: 200,
         width: 150,
         child: RaisedOutlineButton(
@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
           }
           return Center(child: CircularProgressIndicator());
         },
-        future: getAllTour(),
+        future: getPlaceTour(),
       ),
     );
 

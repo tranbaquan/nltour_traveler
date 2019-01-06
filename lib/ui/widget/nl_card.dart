@@ -156,6 +156,7 @@ class _NLCardFormState extends State<NLCardForm> {
   DateTime date;
   TimeOfDay time;
   final _place = TextEditingController();
+  final _description = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -219,6 +220,7 @@ class _NLCardFormState extends State<NLCardForm> {
               ],
             ),
             TextFormField(
+              controller: _description,
               decoration: InputDecoration(
                 hintText: 'Description',
               ),
@@ -231,12 +233,17 @@ class _NLCardFormState extends State<NLCardForm> {
                   style: TextStyle(color: Colors.white),
                 ),
                 height: 35,
-                onPressed: () {},
+                onPressed: bookATour(),
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  bookATour() {
+    var tour = Tour();
+
   }
 }

@@ -136,3 +136,94 @@ class RaisedOutlineButton extends StatelessWidget {
     );
   }
 }
+
+class SimpleButton extends StatelessWidget {
+  final String btnText;
+  final Color textColor;
+  final Function onPress;
+
+  SimpleButton({
+    this.btnText,
+    this.textColor,
+    this.onPress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      child: FlatButton(
+        onPressed: onPress,
+        child: Text(
+          this.btnText,
+          style: TextStyle(
+            fontFamily: 'Semilight',
+            fontSize: 12.0,
+            color: this.textColor,
+          ),
+        ),
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+// simple round button
+class SimpleRoundButton extends StatelessWidget {
+  final Color backgroundColor;
+  final Color roundColor;
+  final String btnText;
+  final Color textColor;
+  final double btnHeight;
+  final double btnWidth;
+  final Function onPressed;
+
+  SimpleRoundButton({
+    this.backgroundColor,
+    this.roundColor,
+    this.btnText,
+    this.textColor,
+    this.btnHeight,
+    this.btnWidth,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
+      height: this.btnHeight,
+      width: this.btnWidth,
+      decoration: BoxDecoration(
+        color: this.backgroundColor,
+        border: Border.all(
+          color: this.roundColor,
+        ),
+        borderRadius: BorderRadius.circular(this.btnHeight / 2),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x26000000),
+            blurRadius: 7.0,
+          ),
+        ],
+      ),
+      child: FlatButton(
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              this.btnText,
+              style: TextStyle(
+                color: this.textColor,
+                fontSize: 12.0,
+                fontFamily: 'Semilight',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

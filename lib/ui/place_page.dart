@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/place_controller.dart';
 import 'package:nltour_traveler/model/place.dart';
+import 'package:nltour_traveler/ui/widget/dialog.dart';
 import 'package:nltour_traveler/ui/widget/menu_card.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_card.dart';
@@ -13,6 +14,8 @@ class PlacePage extends StatefulWidget {
 }
 
 class PlacePageState extends State<PlacePage> {
+  Dialogs dialog = Dialogs();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,7 +116,9 @@ class PlacePageState extends State<PlacePage> {
                 alignment: Alignment.centerRight,
                 child: RaisedOutlineButton(
                   height: 25,
-                  onPressed: () {},
+                  onPressed: () {
+                    dialog.confirm(context, 'Detail', _showDetail(place));
+                  },
                   child: Text(
                     'View',
                     style: TextStyle(
@@ -131,5 +136,9 @@ class PlacePageState extends State<PlacePage> {
     }
 
     return res;
+  }
+
+  Widget _showDetail(Place place) {
+    return null;
   }
 }

@@ -5,6 +5,7 @@ class Hosting {
   static final String tour = host + "tour";
   static final String getAllTours = host + "tour/all";
   static final String getAllPlaces = host + "place/all";
+  static final String getPlacesByName = host + "place/name/";
   static final String getOTP = host + "traveler/otp";
   static final String changePass = host + "traveler/password/change";
 }
