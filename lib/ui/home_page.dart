@@ -6,9 +6,8 @@ import 'package:nltour_traveler/model/place.dart';
 import 'package:nltour_traveler/model/tour.dart';
 import 'package:nltour_traveler/model/traveler.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
-import 'package:nltour_traveler/ui/widget/nl_menu_card.dart';
-import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_card.dart';
+import 'package:nltour_traveler/ui/widget/nl_menu_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {

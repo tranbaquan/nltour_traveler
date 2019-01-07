@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class MessagePage extends StatefulWidget {
   @override
@@ -37,6 +38,30 @@ List<String> messages = [
 ];
 
 class MessagePageState extends State<MessagePage> {
+  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        print('on launch $message');
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(sound: true, badge: true, alert: true),
+    );
+    _firebaseMessaging.getToken().then((token) {
+      print(token);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
