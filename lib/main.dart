@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nltour_traveler/ui/login_page.dart';
+import 'package:nltour_traveler/routes.dart';
 
 void main() => runApp(NLTour());
 
@@ -10,11 +10,16 @@ class NLTour extends StatelessWidget {
     return MaterialApp(
       title: 'NLTour',
       theme: ThemeData(
-        textSelectionColor: Colors.greenAccent,
-        cursorColor: Colors.greenAccent,
-        primaryColor: Colors.greenAccent,
+        textSelectionColor: Color(0xFF008fe5),
+        cursorColor: Color(0xFF008fe5),
+        primaryColor: Color(0xFF008fe5),
+//        accentColor: Color(0xFF3eb43e),
+        accentColor: Color(0xFF008fe5),
+        primaryColorDark: Colors.green,
+        fontFamily: 'Semilight'
       ),
-      home: LoginPage(),
+      initialRoute: '/',
+      routes: routes,
     );
   }
 }
