@@ -13,12 +13,12 @@ class NLTour extends StatelessWidget {
         textSelectionColor: Color(0xFF008fe5),
         cursorColor: Color(0xFF008fe5),
         primaryColor: Color(0xFF008fe5),
-        accentColor: Color(0xFF3eb43e),
+//        accentColor: Color(0xFF3eb43e),
+        accentColor: Color(0xFF008fe5),
         primaryColorDark: Colors.green,
         fontFamily: 'Semilight'
       ),
-//      home: LoginPage(),
-      initialRoute: '/',
+      initialRoute: '/message',
       routes: routes,
     );
   }
