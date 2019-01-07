@@ -40,6 +40,23 @@ class TravellerController {
     });
   }
 
+  Future<Traveler> update(Traveler traveler) async {
+    final client = http.Client();
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    };
+    return await client
+        .put(Hosting.travelerUpdateInfo, body: json.encode(traveler), headers: headers)
+        .then((response) {
+      if (response.statusCode < 200 || response.statusCode >= 400) {
+        return null;
+      } else {
+        return Traveler.fromJson(json.decode(response.body));
+      }
+    });
+  }
+
   Future<Traveler> getTraveler(String email) async {
     final client = http.Client();
     final headers = {

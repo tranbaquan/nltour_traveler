@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
+import 'package:nltour_traveler/controller/auto_complete_api.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
 import 'package:nltour_traveler/model/traveler.dart';
+import 'package:nltour_traveler/model/type.dart';
+import 'package:nltour_traveler/supporter/validator.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_dialog.dart';
+import 'package:nltour_traveler/utils/dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InformationPage extends StatefulWidget {
@@ -19,15 +26,30 @@ class InformationPage extends StatefulWidget {
 class InformationPageState extends State<InformationPage> {
   Dialogs dialogs = Dialogs();
   bool isEnable = false;
-  String gender = '';
   Traveler account = Traveler();
+
+  final _password = TextEditingController();
+  final _reenterPassword = TextEditingController();
+  final _firstName = TextEditingController();
+  final _lastName = TextEditingController();
+  final _personalId = TextEditingController();
+  final _country = TextEditingController();
+  final _languages = TextEditingController();
+  List _genders = [Gender.MALE, Gender.FEMALE];
+  Gender _currentGender;
+  File _image;
+  final dateFormat = DateFormat('MMM dd, yyyy');
+  final autoComplete = CountryAutoComplete();
+  DateTime _dateTime = new DateTime.now();
 
   List<RadioModel> sampleData = new List<RadioModel>();
 
   @override
   void initState() {
-    sampleData.add(new RadioModel(true, 'men'));
-    sampleData.add(new RadioModel(false, 'women'));
+    sampleData.add(
+        new RadioModel(account.gender == Gender.MALE ? false : true, 'men'));
+    sampleData.add(
+        new RadioModel(account.gender == Gender.MALE ? true : false, 'women'));
     super.initState();
   }
 
@@ -39,18 +61,13 @@ class InformationPageState extends State<InformationPage> {
       print(json.encode(data));
       if (data != null) {
         account = data;
+        _dateTime = account.dob;
         return account;
       } else {
         return null;
       }
     });
   }
-
-  // ********************************* GENDER RADIO BUTTON *********************
-  // ***************************************************************************
-  // ***************************************************************************
-  // ********************************* DATE TIME PICKER ************************
-  DateTime _dateTime = new DateTime.now();
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -65,9 +82,6 @@ class InformationPageState extends State<InformationPage> {
     }
   }
 
-  // ********************************* DATE TIME PICKER ************************
-  // ***************************************************************************
-
   @override
   Widget build(BuildContext context) {
     final _editableButton = Container(
@@ -77,11 +91,15 @@ class InformationPageState extends State<InformationPage> {
               btnText: 'SAVE',
               backgroundColor: Color(0xff008fe5),
               roundColor: Color(0xff008fe5),
-              btnHeight: 40,
+              btnHeight: 30,
               btnWidth: 80,
               onPressed: () {
-                setState(() {
-                  isEnable = !isEnable;
+                NLDialog.showLoading(context);
+                updateUser().then((data) {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    isEnable = !isEnable;
+                  });
                 });
               },
             )
@@ -90,7 +108,7 @@ class InformationPageState extends State<InformationPage> {
               btnText: 'EDIT',
               backgroundColor: Color(0xffffffff),
               roundColor: Color(0xff008fe5),
-              btnHeight: 40,
+              btnHeight: 30,
               btnWidth: 80,
               onPressed: () {
                 setState(() {
@@ -100,21 +118,38 @@ class InformationPageState extends State<InformationPage> {
             ),
     );
 
-    String _password;
+    final _cancelButton = Container(
+      margin: EdgeInsets.only(left: 5),
+      child: SimpleRoundButton(
+        textColor: Color(0xff006fb2),
+        btnText: 'CANCEL',
+        backgroundColor: Color(0xffffffff),
+        roundColor: Color(0xff008fe5),
+        btnHeight: 30,
+        btnWidth: 80,
+        onPressed: () {
+          setState(() {
+            isEnable = !isEnable;
+          });
+        },
+      ),
+    );
+
     final _passwordField = TextFormField(
       autocorrect: false,
       obscureText: true,
+      controller: _password,
       decoration: InputDecoration(labelText: 'Password'),
-      validator: (value) => value.isEmpty ? "Password can't be empty" : null,
-      onSaved: (val) => _password = val,
+      validator: Validator.validatePassword,
     );
-    String _passwordConfirm;
     final _passwordConfirmField = TextFormField(
-        autocorrect: false,
-        obscureText: true,
-        decoration: InputDecoration(labelText: 'Retype Password'),
-        validator: (value) => value.isEmpty ? "Password can't be empty" : null,
-        onSaved: (val) => _passwordConfirm = val);
+      autocorrect: false,
+      obscureText: true,
+      controller: _reenterPassword,
+      decoration: InputDecoration(labelText: 'Retype Password'),
+      validator: (value) =>
+          value != _password.text ? "Password not match!" : null,
+    );
 
     final _confirmWidget = Container(
       child: SizedBox(
@@ -180,7 +215,7 @@ class InformationPageState extends State<InformationPage> {
                               style: TextStyle(
                                 fontFamily: 'Normal',
                                 fontSize: 20,
-                                color: Color(0xff000000),
+                                color: Colors.white,
                               ),
                             ),
                             Text(
@@ -192,24 +227,17 @@ class InformationPageState extends State<InformationPage> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(top: 20),
                               padding: EdgeInsets.symmetric(horizontal: 18),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
-                                  Container(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Text(
-                                      'General Information',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontFamily: 'Semilight'),
-                                    ),
+                                  Expanded(
+                                    child: Container(),
                                   ),
                                   _editableButton,
+                                  isEnable ? _cancelButton : Container(),
                                 ],
                               ),
                             ),
@@ -218,10 +246,22 @@ class InformationPageState extends State<InformationPage> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(top: 10),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 18),
+                              child: Text(
+                                'General Information',
+                                style: TextStyle(
+                                    color: Color(0xff707070),
+                                    fontSize: 16,
+                                    fontFamily: 'Semilight'),
+                              ),
+                            ),
                             Container(
                               width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.symmetric(
@@ -242,13 +282,15 @@ class InformationPageState extends State<InformationPage> {
                                   ),
                                   Expanded(
                                     child: Container(
-                                      child: TextField(
+                                      child: TextFormField(
                                         enabled: isEnable,
                                         style: TextStyle(
                                           color: Color(0xff008fe5),
                                           fontSize: 14.0,
                                           fontFamily: 'Semilight',
                                         ),
+                                        controller: _firstName,
+                                        validator: Validator.notEmpty,
                                         decoration: InputDecoration(
                                           hintText: account.firstName,
                                           hintStyle: TextStyle(
@@ -282,13 +324,15 @@ class InformationPageState extends State<InformationPage> {
                                   ),
                                   Expanded(
                                     child: Container(
-                                      child: TextField(
+                                      child: TextFormField(
                                         enabled: isEnable,
                                         style: TextStyle(
                                           color: Color(0xff008fe5),
                                           fontSize: 14.0,
                                           fontFamily: 'Semilight',
                                         ),
+                                        validator: Validator.notEmpty,
+                                        controller: _lastName,
                                         decoration: InputDecoration(
                                           hintText: account.lastName,
                                           hintStyle: TextStyle(
@@ -322,13 +366,14 @@ class InformationPageState extends State<InformationPage> {
                                   ),
                                   Expanded(
                                     child: Container(
-                                      child: TextField(
+                                      child: TextFormField(
                                         enabled: isEnable,
                                         style: TextStyle(
                                           color: Color(0xff008fe5),
                                           fontSize: 14.0,
                                           fontFamily: 'Semilight',
                                         ),
+                                        validator: Validator.notEmpty,
                                         decoration: InputDecoration(
                                           hintText: '+84393452595',
                                           hintStyle: TextStyle(
@@ -421,8 +466,9 @@ class InformationPageState extends State<InformationPage> {
                                           fontSize: 14.0,
                                           fontFamily: 'Semilight',
                                         ),
-                                        decoration: const InputDecoration(
-                                          hintText: '039.680.8818',
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              isEnable ? dateFormat.format(account.dob) : dateFormat.format(_dateTime),
                                           hintStyle: TextStyle(
                                             color: Color(0xff000000),
                                           ),
@@ -454,13 +500,15 @@ class InformationPageState extends State<InformationPage> {
                                   ),
                                   Expanded(
                                     child: Container(
-                                      child: TextField(
+                                      child: TextFormField(
                                         enabled: isEnable,
+                                        validator: Validator.notEmpty,
                                         style: TextStyle(
                                           color: Color(0xff008fe5),
                                           fontSize: 14.0,
                                           fontFamily: 'Semilight',
                                         ),
+                                        controller: _personalId,
                                         decoration: InputDecoration(
                                           hintText: account.personalID,
                                           hintStyle: TextStyle(
@@ -494,20 +542,40 @@ class InformationPageState extends State<InformationPage> {
                                   ),
                                   Expanded(
                                     child: Container(
-                                      child: TextField(
-                                        enabled: isEnable,
-                                        style: TextStyle(
-                                          color: Color(0xff008fe5),
-                                          fontSize: 14.0,
-                                          fontFamily: 'Semilight',
-                                        ),
-                                        decoration: InputDecoration(
-                                          hintText: account.address.address,
-                                          hintStyle: TextStyle(
-                                            color: Color(0xff000000),
+                                      child: TypeAheadField(
+                                        textFieldConfiguration:
+                                            TextFieldConfiguration(
+                                          enabled: isEnable,
+                                          style: TextStyle(
+                                            color: Color(0xff008fe5),
+                                            fontSize: 14.0,
+                                            fontFamily: 'Semilight',
                                           ),
-                                          border: InputBorder.none,
+                                          decoration: InputDecoration(
+                                            hintText: account.address.country,
+                                            hintStyle: TextStyle(
+                                              color: Color(0xff000000),
+                                            ),
+                                            border: InputBorder.none,
+                                          ),
+                                          controller: _country,
                                         ),
+                                        suggestionsCallback: (pattern) async {
+                                          return await autoComplete
+                                              .getCountries(pattern);
+                                        },
+                                        itemBuilder: (context, suggestion) {
+                                          return ListTile(
+                                            title: Text(suggestion),
+                                          );
+                                        },
+                                        transitionBuilder: (context,
+                                            suggestionsBox, controller) {
+                                          return suggestionsBox;
+                                        },
+                                        onSuggestionSelected: (suggestion) {
+                                          _country.text = suggestion;
+                                        },
                                       ),
                                     ),
                                   ),
@@ -534,21 +602,41 @@ class InformationPageState extends State<InformationPage> {
                                   ),
                                   Expanded(
                                     child: Container(
-                                      child: TextField(
-                                        enabled: isEnable,
-                                        style: TextStyle(
-                                          color: Color(0xff008fe5),
-                                          fontSize: 14.0,
-                                          fontFamily: 'Semilight',
-                                        ),
-                                        decoration: InputDecoration(
-                                          hintText:
-                                              account.languages.primaryLanguage,
-                                          hintStyle: TextStyle(
-                                            color: Color(0xff000000),
+                                      child: TypeAheadField(
+                                        textFieldConfiguration:
+                                            TextFieldConfiguration(
+                                          enabled: isEnable,
+                                          style: TextStyle(
+                                            color: Color(0xff008fe5),
+                                            fontSize: 14.0,
+                                            fontFamily: 'Semilight',
                                           ),
-                                          border: InputBorder.none,
+                                          decoration: InputDecoration(
+                                            hintText: account
+                                                .languages.primaryLanguage,
+                                            hintStyle: TextStyle(
+                                              color: Color(0xff000000),
+                                            ),
+                                            border: InputBorder.none,
+                                          ),
+                                          controller: _languages,
                                         ),
+                                        suggestionsCallback: (pattern) async {
+                                          return await autoComplete
+                                              .getCountries(pattern);
+                                        },
+                                        itemBuilder: (context, suggestion) {
+                                          return ListTile(
+                                            title: Text(suggestion),
+                                          );
+                                        },
+                                        transitionBuilder: (context,
+                                            suggestionsBox, controller) {
+                                          return suggestionsBox;
+                                        },
+                                        onSuggestionSelected: (suggestion) {
+                                          _languages.text = suggestion;
+                                        },
                                       ),
                                     ),
                                   ),
@@ -674,5 +762,32 @@ class InformationPageState extends State<InformationPage> {
         ),
       ),
     );
+  }
+
+  Future<Traveler> updateUser() async {
+    var controller = TravellerController();
+    final prefs = await SharedPreferences.getInstance();
+    account.languages.primaryLanguage = _languages.text.isEmpty ? account.languages.primaryLanguage : _languages.text.isEmpty;
+    account.dob = _dateTime;
+    account.gender = sampleData[0].isSelected ? Gender.MALE : Gender.FEMALE;
+    account.address.country = _country.text.isEmpty ? account.address.country : _country.text;
+    account.personalID = _personalId.text.isEmpty ? account.personalID : _personalId.text;
+    account.firstName = _firstName.text.isEmpty ? account.firstName : _firstName.text;
+    account.lastName = _lastName.text.isEmpty ? account.lastName : _lastName.text;
+
+    return controller.update(account).then((data) {
+      print(json.encode(data));
+      if (data != null) {
+        prefs.setBool('logged', true);
+        prefs.setString('email', data.email);
+        prefs.setString('avatar', data.avatar);
+        prefs.setString('firstName', data.firstName);
+        prefs.setString('lastName', data.lastName);
+        setState(() {
+          account = data;
+          return account;
+        });
+      }
+    });
   }
 }

@@ -18,7 +18,7 @@ class NLTour extends StatelessWidget {
         primaryColorDark: Colors.green,
         fontFamily: 'Semilight'
       ),
-      initialRoute: '/message',
+      initialRoute: '/',
       routes: routes,
     );
   }

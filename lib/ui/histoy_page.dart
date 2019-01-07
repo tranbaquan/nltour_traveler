@@ -18,7 +18,7 @@ class HistoryPageState extends State<HistoryPage> {
     return Scaffold(
       appBar: buildAppBar(context),
       drawer: Drawer(
-        child: MenuCard(),
+        child: NLMenuCard(),
       ),
       body: buildBody(context),
     );

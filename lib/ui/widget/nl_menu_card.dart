@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speech_bubble/speech_bubble.dart';
 
-class MenuCard extends StatefulWidget {
+class NLMenuCard extends StatefulWidget {
   @override
-  _MenuCardState createState() {
-    return new _MenuCardState();
+  _NLMenuCardState createState() {
+    return new _NLMenuCardState();
   }
 }
 
-class _MenuCardState extends State<MenuCard> {
+class _NLMenuCardState extends State<NLMenuCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +22,13 @@ class _MenuCardState extends State<MenuCard> {
         Navigator.of(context).pushReplacementNamed('/home');
       }),
       ChoiceEvent(onTap: (BuildContext context) {
-        Navigator.of(context).pushReplacementNamed('/info');
+        Navigator.of(context).pushNamed('/info');
       }),
       ChoiceEvent(onTap: (BuildContext context) {
-        Navigator.of(context).pushReplacementNamed('/payment');
+        Navigator.of(context).pushNamed('/payment');
       }),
       ChoiceEvent(onTap: (BuildContext context) {
-        Navigator.of(context).pushReplacementNamed('/history');
+        Navigator.of(context).pushNamed('/history');
       }),
       ChoiceEvent(onTap: (BuildContext context) {}),
       ChoiceEvent(onTap: (BuildContext context) async {

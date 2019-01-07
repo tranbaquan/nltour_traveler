@@ -70,7 +70,6 @@ class Dialogs {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-//          contentPadding: EdgeInsets.all(9.0),
           title: Text(title),
           content: SingleChildScrollView(
             child: widget,

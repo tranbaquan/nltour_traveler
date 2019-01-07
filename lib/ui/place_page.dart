@@ -19,7 +19,7 @@ class PlacePageState extends State<PlacePage> {
     return Scaffold(
       appBar: buildAppBar(context),
       drawer: Drawer(
-        child: MenuCard(),
+        child: NLMenuCard(),
       ),
       body: FutureBuilder(
         builder: (context, snapshot) {
