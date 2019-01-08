@@ -1,8 +1,9 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:nltour_traveler/model/collaborator.dart';
 import 'package:nltour_traveler/model/tour.dart';
-import 'package:http/http.dart' as http;
 import 'package:nltour_traveler/network/host.dart';
-import 'dart:convert';
 
 class TourController {
   Future<List<Tour>> getAll() async {
@@ -80,6 +81,23 @@ class TourController {
         return list
             .map((m) => Tour.fromJson(json.decode(json.encode(m))))
             .toList();
+      }
+    });
+  }
+
+  Future<bool> acceptTour(String id, String email) async {
+    final client = http.Client();
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'id': id,
+      'email': email,
+    };
+    return await client.put(Hosting.tour, headers: headers).then((response) {
+      if (response.statusCode < 200 && response.statusCode >= 400) {
+        return null;
+      } else {
+        return Tour.fromJson(json.decode(json.encode(response.body))) != null;
       }
     });
   }
