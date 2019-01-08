@@ -23,7 +23,7 @@ class ChangePassPageState extends State<ChangePassPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NLAppBar.buildAppBar(context, 'NLTour Support'),
+      appBar: NLAppbar.buildAppbar(context, 'NLTour Support'),
       body: Container(
         color: Colors.white,
         height: MediaQuery.of(context).size.height,

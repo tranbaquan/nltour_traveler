@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class NLAppBar {
+class NLAppbar {
 
-  static PreferredSize buildAppBar(BuildContext context, String title) {
+  static PreferredSize buildAppbar(BuildContext context, String title) {
     final appBar = PreferredSize(
       preferredSize: Size(double.infinity, 100.0),
       child: Container(

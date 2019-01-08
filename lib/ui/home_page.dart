@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
       child: NLCardForm(),
     );
     return Scaffold(
-      appBar: NLAppBar.buildAppBar(context, 'NLTour'),
+      appBar: NLAppbar.buildAppbar(context, 'NLTour'),
       drawer: Drawer(
         child: NLMenuCard(),
       ),

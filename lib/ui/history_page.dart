@@ -17,7 +17,7 @@ class HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NLAppBar.buildAppBar(context, 'History'),
+      appBar: NLAppbar.buildAppbar(context, 'History'),
       drawer: Drawer(
         child: NLMenuCard(),
       ),

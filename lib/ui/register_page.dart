@@ -54,7 +54,7 @@ class RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: NLAppBar.buildAppBar(context, 'Create An Account'),
+      appBar: NLAppbar.buildAppbar(context, 'Create An Account'),
       body: buildRegisterForm(context),
     );
   }

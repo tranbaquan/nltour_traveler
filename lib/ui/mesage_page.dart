@@ -1,71 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nltour_traveler/model/collaborator.dart';
+import 'package:nltour_traveler/model/message.dart';
+import 'package:nltour_traveler/model/traveler.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessagePage extends StatefulWidget {
+  final Collaborator collaborator;
+  final Traveler traveler;
+
+  const MessagePage({Key key, this.collaborator, this.traveler})
+      : super(key: key);
+
   @override
   MessagePageState createState() {
     return MessagePageState();
   }
 }
 
-List<String> messages = [
-  'abwwwwwc',
-  'def',
-  'abc',
-  'dewwwwwwwwwwf',
-  'defwwwwwwwwwwwwww',
-  'def',
-  'def',
-  'wwwwwwwww',
-  'def',
-  'def',
-  'dewwwwwwwwwf',
-  'desf',
-  'dwwwwwwwwwwwef',
-  'deaassf',
-  'def',
-  'dessssf',
-  'dsssssssssssssef',
-  'dddef',
-  'deeeeeeeeef',
-  'dessssssf',
-  'abwwwwwwwwc',
-  'dwwef',
-  'abc',
-  'def'
-];
-
 class MessagePageState extends State<MessagePage> {
-  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  CollectionReference messageReference;
+  List<Message> messages = [];
+  final _message = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) {
-        print('on message $message');
-      },
-      onResume: (Map<String, dynamic> message) {
-        print('on resume $message');
-      },
-      onLaunch: (Map<String, dynamic> message) {
-        print('on launch $message');
-      },
-    );
-    _firebaseMessaging.requestNotificationPermissions(
-      const IosNotificationSettings(sound: true, badge: true, alert: true),
-    );
-    _firebaseMessaging.getToken().then((token) {
-      print(token);
-    });
+    messageReference = Firestore.instance.collection('message/' +
+        widget.traveler.personalID +
+        '/' +
+        widget.collaborator.personalID);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NLAppBar.buildAppBar(context, 'Message'),
+      appBar: NLAppbar.buildAppbar(context, 'Message'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -73,54 +49,107 @@ class MessagePageState extends State<MessagePage> {
           child: Column(
             children: <Widget>[
               Expanded(
-                child: ListView.builder(
-                  reverse: true,
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      children: <Widget>[
-                        index % 2 == 0
-                            ? Expanded(
-                                child: Container(),
-                              )
-                            : Container(
-                                margin: EdgeInsets.symmetric(vertical: 2),
-                                padding: EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Color(0xff008fe5),
-                                ),
-                                child: Text(
-                                  messages[index],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Normal',
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                        index % 2 == 0
-                            ? Container(
-                                margin: EdgeInsets.symmetric(vertical: 2),
-                                padding: EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Color(0xff008fe5),
-                                ),
-                                child: Text(
-                                  messages[index],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Normal',
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              )
-                            : Expanded(
-                                child: Container(),
-                              )
-                      ],
-                    );
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: messageReference.snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError)
+                      return new Text('Error: ${snapshot.error}');
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Center(child: CircularProgressIndicator());
+                      default:
+                        return Container(
+                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: new ListView(
+                            reverse: true,
+                            children: snapshot.data.documents
+                                .map((DocumentSnapshot document) {
+                                  return Row(
+                                    children: <Widget>[
+                                      document['email'] == widget.traveler.email
+                                          ? Expanded(
+                                              child: Container(),
+                                            )
+                                          : Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: Image.network(
+                                                    widget.collaborator.avatar,
+                                                    height: 40,
+                                                    width: 40,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.all(2),
+                                                  padding: EdgeInsets.all(6),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    color: Color(0xff008fe5),
+                                                  ),
+                                                  child: Text(
+                                                    document['content'],
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontFamily: 'Normal',
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                      document['email'] == widget.traveler.email
+                                          ? Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Container(
+                                                  margin: EdgeInsets.all(2),
+                                                  padding: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: Color(0xff008fe5),
+                                                  ),
+                                                  child: Text(
+                                                    document['content'],
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontFamily: 'Normal',
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: Image.network(
+                                                    widget.traveler.avatar,
+                                                    height: 40,
+                                                    width: 40,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          : Expanded(
+                                              child: Container(),
+                                            )
+                                    ],
+                                  );
+                                })
+                                .toList()
+                                .reversed
+                                .toList(),
+                          ),
+                        );
+                    }
                   },
                 ),
               ),
@@ -140,7 +169,9 @@ class MessagePageState extends State<MessagePage> {
 
   Widget buildSendButton() {
     return IconButton(
-      onPressed: () {},
+      onPressed: () {
+        sendMessage();
+      },
       icon: Icon(Icons.send),
     );
   }
@@ -162,6 +193,7 @@ class MessagePageState extends State<MessagePage> {
               Flexible(
                 child: TextFormField(
                   maxLengthEnforced: true,
+                  controller: _message,
                   decoration: InputDecoration(
                     hintText: 'Send a message',
                   ),
@@ -174,5 +206,13 @@ class MessagePageState extends State<MessagePage> {
             ],
           ),
         ));
+  }
+
+  void sendMessage() {
+    messageReference
+        .add({'email': widget.traveler.personalID, 'content': _message.text});
+    setState(() {
+      _message.clear();
+    });
   }
 }

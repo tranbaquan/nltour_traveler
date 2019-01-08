@@ -17,7 +17,7 @@ class PlacePageState extends State<PlacePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NLAppBar.buildAppBar(context, 'Place'),
+      appBar: NLAppbar.buildAppbar(context, 'Place'),
       drawer: Drawer(
         child: NLMenuCard(),
       ),

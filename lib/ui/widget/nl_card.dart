@@ -11,6 +11,7 @@ import 'package:nltour_traveler/model/place.dart';
 import 'package:nltour_traveler/model/tour.dart';
 import 'package:nltour_traveler/model/traveler.dart';
 import 'package:nltour_traveler/model/type.dart';
+import 'package:nltour_traveler/ui/mesage_page.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_dialog.dart';
 import 'package:nltour_traveler/utils/dialog.dart';
@@ -128,7 +129,7 @@ class NLHistory extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          tour.tourGuide == null ? showPending(context) : print('abc');
+          tour.tourGuide == null ? showPending(context) : print('...');
         },
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -256,20 +257,21 @@ class NLHistory extends StatelessWidget {
       child: FutureBuilder(
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ListView(
+            return Column(
+              mainAxisSize: MainAxisSize.min,
               children: snapshot.data,
             );
           } else {
             return Center(child: CircularProgressIndicator());
           }
         },
-        future: getPendingGuild(),
+        future: getPendingGuild(context),
       ),
     );
     NLDialog.showCustomContentDialog(context, 'Registering', content);
   }
 
-  getPendingGuild() async {
+  getPendingGuild(BuildContext context) async {
     TourController controller = TourController();
     var res = List<Widget>();
     List<Collaborator> collaborators =
@@ -304,7 +306,7 @@ class NLHistory extends StatelessWidget {
               children: <Widget>[
                 SimpleRoundButton(
                   onPressed: () {
-                    goToMessage(c.email);
+                    goToMessage(context, c);
                   },
                   btnText: 'Message',
                   btnHeight: 30,
@@ -350,8 +352,21 @@ class NLHistory extends StatelessWidget {
     return '';
   }
 
-  void goToMessage(String email) {
-    //TODO
+  Future goToMessage(BuildContext context, Collaborator collborator) async {
+    final prefs = await SharedPreferences.getInstance();
+    String myEmail = prefs.getString('email');
+    TravellerController controller = TravellerController();
+    controller.findByEmail(myEmail).then((data) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MessagePage(
+              traveler: data,
+              collaborator: collborator,
+            )),
+      );
+    });
+
   }
 
   void acceptGuide(String email) {
