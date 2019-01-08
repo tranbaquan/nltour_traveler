@@ -1,6 +1,6 @@
 class Hosting {
   //  static final String host = "http://10.20.17.119:8080/";
-  static final String host = "http://192.168.43.136:8080/";
+  static final String host = "http://10.0.129.3:8080/";
   static final String travelerLogin = host + "traveler/login";
   static final String traveler = host + "traveler";
   static final String travelerUpdateInfo = host + "traveler/updateinfor";

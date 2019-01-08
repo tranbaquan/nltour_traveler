@@ -77,10 +77,14 @@ class _LoginPageState extends State<LoginPage> {
               height: 240,
             ),
           ),
-          Icon(
-            Icons.brightness_1,
-            size: 120,
-            color: Colors.greenAccent,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(60),
+            child: Image.network(
+              'https://firebasestorage.googleapis.com/v0/b/nltour-2018.appspot.com/o/NLTravel.png?alt=media&token=a3a77bc0-3ebe-4f19-9dde-16a2bdf77a03',
+              width: 120,
+              height: 120,
+              fit: BoxFit.cover,
+            ),
           )
         ],
       ),
@@ -129,8 +133,8 @@ class _LoginPageState extends State<LoginPage> {
       height: 40.0,
       onPressed: () {
         if (_formKey.currentState.validate()) {
-            NLDialog.showLoading(context);
-            _login();
+          NLDialog.showLoading(context);
+          _login();
         }
       },
     );
@@ -192,7 +196,8 @@ class _LoginPageState extends State<LoginPage> {
         _saveUser(data);
         Navigator.of(context).pushReplacementNamed("/home");
       } else {
-        NLDialog.showInfo(context, 'Login Failed', 'Email or password is incorrect!');
+        NLDialog.showInfo(
+            context, 'Login Failed', 'Email or password is incorrect!');
       }
     });
   }

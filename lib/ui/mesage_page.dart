@@ -21,6 +21,7 @@ class MessagePage extends StatefulWidget {
 
 class MessagePageState extends State<MessagePage> {
   CollectionReference messageReference;
+  CollectionReference messageReference1;
   List<Message> messages = [];
   final _message = TextEditingController();
 
@@ -31,6 +32,11 @@ class MessagePageState extends State<MessagePage> {
         widget.traveler.personalID +
         '/' +
         widget.collaborator.personalID);
+
+    messageReference = Firestore.instance.collection('message/' +
+        widget.collaborator.personalID +
+        '/' +
+        widget.traveler.personalID);
   }
 
   @override
@@ -60,7 +66,8 @@ class MessagePageState extends State<MessagePage> {
                         return Center(child: CircularProgressIndicator());
                       default:
                         return Container(
-                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                           child: new ListView(
                             reverse: true,
                             children: snapshot.data.documents

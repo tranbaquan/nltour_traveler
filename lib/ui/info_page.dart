@@ -218,7 +218,7 @@ class InformationPageState extends State<InformationPage> {
                               style: TextStyle(
                                 fontFamily: 'Semilight',
                                 fontSize: 11,
-                                color: Color(0xff383838),
+                                color: Colors.grey[200],
                               ),
                             ),
                             Container(

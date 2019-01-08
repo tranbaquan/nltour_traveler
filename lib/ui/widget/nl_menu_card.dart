@@ -16,33 +16,6 @@ class _NLMenuCardState extends State<NLMenuCard> {
     return _buildProfileDrawer(context);
   }
 
-  onTap(int index) {
-    List<ChoiceEvent> events = <ChoiceEvent>[
-      ChoiceEvent(onTap: (BuildContext context) {
-        Navigator.of(context).pushReplacementNamed('/home');
-      }),
-      ChoiceEvent(onTap: (BuildContext context) {
-        Navigator.of(context).pushNamed('/info');
-      }),
-      ChoiceEvent(onTap: (BuildContext context) {
-        Navigator.of(context).pushNamed('/payment');
-      }),
-      ChoiceEvent(onTap: (BuildContext context) {
-        Navigator.of(context).pushNamed('/history');
-      }),
-      ChoiceEvent(onTap: (BuildContext context) {}),
-      ChoiceEvent(onTap: (BuildContext context) async {
-        final prefs = await SharedPreferences.getInstance();
-        prefs.clear().then((isCleared) {
-          if (isCleared) {
-            Navigator.of(context).pushReplacementNamed('/');
-          }
-        });
-      }),
-    ];
-    events[index].onTap(context);
-  }
-
   Future<String> getInfo(String type) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(type);
@@ -222,7 +195,7 @@ class _NLMenuCardState extends State<NLMenuCard> {
                 Container(
                   child: GestureDetector(
                     child: Text(
-                      'Home',
+                      choices[0].title,
                       style: TextStyle(
                         color: Color(0x00ff444444),
                         fontFamily: 'Semilight',
@@ -242,7 +215,7 @@ class _NLMenuCardState extends State<NLMenuCard> {
                 Container(
                   child: GestureDetector(
                     child: Text(
-                      'Update information',
+                      choices[1].title,
                       style: TextStyle(
                         color: Color(0x00ff444444),
                         fontFamily: 'Semilight',
@@ -265,7 +238,7 @@ class _NLMenuCardState extends State<NLMenuCard> {
                       Expanded(
                         child: GestureDetector(
                           child: Text(
-                            'Payment',
+                            choices[2].title,
                             style: TextStyle(
                               color: Color(0x00ff444444),
                               fontFamily: 'Semilight',
@@ -303,7 +276,7 @@ class _NLMenuCardState extends State<NLMenuCard> {
                 Container(
                   child: GestureDetector(
                     child: Text(
-                      'View history',
+                      choices[3].title,
                       style: TextStyle(
                         color: Color(0x00ff444444),
                         fontFamily: 'Semilight',
@@ -320,10 +293,30 @@ class _NLMenuCardState extends State<NLMenuCard> {
                   color: Color(0x00ffcfcfcf),
                   indent: 0.0,
                 ),
+//                Container(
+//                  child: GestureDetector(
+//                    child: Text(
+//                      choices[6].title,
+//                      style: TextStyle(
+//                        color: Color(0x00ff444444),
+//                        fontFamily: 'Semilight',
+//                        fontSize: 14,
+//                      ),
+//                    ),
+//                    onTap: () {
+//                      onTap(6);
+//                    },
+//                  ),
+//                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+//                ),
+//                new Divider(
+//                  color: Color(0x00ffcfcfcf),
+//                  indent: 0.0,
+//                ),
                 Container(
                   child: GestureDetector(
                     child: Text(
-                      'Privacy Policy | Term of Use',
+                      choices[4].title,
                       style: TextStyle(
                         color: Color(0x00ff444444),
                         fontFamily: 'Semilight',
@@ -343,7 +336,7 @@ class _NLMenuCardState extends State<NLMenuCard> {
                 Container(
                   child: GestureDetector(
                     child: Text(
-                      'Sign out',
+                      choices[5].title,
                       style: TextStyle(
                         color: Color(0x00ff444444),
                         fontFamily: 'Semilight',
@@ -363,6 +356,36 @@ class _NLMenuCardState extends State<NLMenuCard> {
       ),
     );
   }
+
+  onTap(int index) {
+    List<ChoiceEvent> events = <ChoiceEvent>[
+      ChoiceEvent(onTap: (BuildContext context) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      }),
+      ChoiceEvent(onTap: (BuildContext context) {
+        Navigator.of(context).pushNamed('/info');
+      }),
+      ChoiceEvent(onTap: (BuildContext context) {
+        Navigator.of(context).pushNamed('/payment');
+      }),
+      ChoiceEvent(onTap: (BuildContext context) {
+        Navigator.of(context).pushNamed('/history');
+      }),
+      ChoiceEvent(onTap: (BuildContext context) {}),
+      ChoiceEvent(onTap: (BuildContext context) async {
+        final prefs = await SharedPreferences.getInstance();
+        prefs.clear().then((isCleared) {
+          if (isCleared) {
+            Navigator.of(context).pushReplacementNamed('/');
+          }
+        });
+      }),
+      ChoiceEvent(onTap: (BuildContext context) {
+        Navigator.of(context).pushNamed('/message_list');
+      }),
+    ];
+    events[index].onTap(context);
+  }
 }
 
 class Choice {
@@ -373,11 +396,12 @@ class Choice {
 
 const List<Choice> choices = const <Choice>[
   const Choice(title: 'Home'),
-  const Choice(title: 'Update information'),
+  const Choice(title: 'Information'),
   const Choice(title: 'Payment'),
-  const Choice(title: 'View history'),
-  const Choice(title: 'Privacy Policy | Term of Use'),
+  const Choice(title: 'History'),
+  const Choice(title: 'Privacy Policy'),
   const Choice(title: 'Sign Out'),
+  const Choice(title: 'My messages'),
 ];
 
 class ChoiceEvent {
