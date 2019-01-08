@@ -23,7 +23,8 @@ Tour _$TourFromJson(Map<String, dynamic> json) {
           : DateTime.parse(json['startDate'] as String),
       price: (json['price'] as num)?.toDouble(),
       isAccepted: json['isAccepted'] as bool,
-      paid: json['paid'] as bool);
+      paid: json['paid'] as bool,
+      description: json['description'] as String);
 }
 
 Map<String, dynamic> _$TourToJson(Tour instance) => <String, dynamic>{
@@ -34,5 +35,6 @@ Map<String, dynamic> _$TourToJson(Tour instance) => <String, dynamic>{
       'startDate': instance.startDate?.toIso8601String(),
       'price': instance.price,
       'isAccepted': instance.isAccepted,
-      'paid': instance.paid
+      'paid': instance.paid,
+      'description': instance.description
     };

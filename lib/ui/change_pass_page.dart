@@ -2,6 +2,7 @@ import 'package:device_id/device_id.dart';
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
 import 'package:nltour_traveler/supporter/validator.dart';
+import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_form.dart';
 import 'package:nltour_traveler/utils/dialog.dart';
@@ -22,7 +23,7 @@ class ChangePassPageState extends State<ChangePassPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context),
+      appBar: NLAppBar.buildAppBar(context, 'NLTour Support'),
       body: Container(
         color: Colors.white,
         height: MediaQuery.of(context).size.height,
@@ -78,43 +79,6 @@ class ChangePassPageState extends State<ChangePassPage> {
         ),
       ),
     );
-  }
-
-  PreferredSize buildAppBar(BuildContext context) {
-    final appBar = PreferredSize(
-      preferredSize: Size(double.infinity, 100.0),
-      child: Container(
-        padding: EdgeInsets.fromLTRB(
-            MediaQuery.of(context).padding.left,
-            MediaQuery.of(context).padding.top,
-            MediaQuery.of(context).padding.right,
-            MediaQuery.of(context).padding.top),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF008fe5), Color(0xFF3eb43e)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey[500],
-              offset: Offset(0.0, 1.5),
-              blurRadius: 1.5,
-            ),
-          ],
-        ),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title: Text(
-            "NLTour",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-        ),
-      ),
-    );
-    return appBar;
   }
 
   void _changePass() async {

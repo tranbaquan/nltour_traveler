@@ -15,16 +15,19 @@ class Tour {
   double price;
   bool isAccepted;
   bool paid;
+  String description;
 
-  Tour(
-      {this.id,
-      this.place,
-      this.traveler,
-      this.tourGuide,
-      this.startDate,
-      this.price,
-      this.isAccepted,
-      this.paid});
+  Tour({
+    this.id,
+    this.place,
+    this.traveler,
+    this.tourGuide,
+    this.startDate,
+    this.price,
+    this.isAccepted,
+    this.paid,
+    this.description,
+  });
 
   factory Tour.fromJson(Map<String, dynamic> json) => _$TourFromJson(json);
 

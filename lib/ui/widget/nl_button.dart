@@ -150,7 +150,6 @@ class SimpleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       child: FlatButton(
         onPressed: onPress,
@@ -190,7 +189,6 @@ class SimpleRoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
       height: this.btnHeight,
