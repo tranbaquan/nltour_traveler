@@ -94,4 +94,36 @@ class Dialogs {
       },
     );
   }
+
+  confirm3(BuildContext context, String title, Widget widget, String txtNO,
+      Function onChange) {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: widget,
+          ),
+          actions: <Widget>[
+            SimpleButton(
+              btnText: txtNO,
+              textColor: Color(0xff008fe5),
+              onPress: () => _confirmResult(false, context),
+            ),
+            SimpleRoundButton(
+              btnText: 'Change',
+              btnWidth: 85.0,
+              btnHeight: 35.0,
+              roundColor: Color(0x00ffffff),
+              textColor: Color(0xffffffff),
+              backgroundColor: Color(0xff008fe5),
+              onPressed: onChange,
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

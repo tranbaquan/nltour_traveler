@@ -131,6 +131,29 @@ class TravellerController {
     });
   }
 
+  Future<Traveler> changePassword1(
+      String email,String oldPassword, String newPassword) async {
+    final client = http.Client();
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'email': email,
+      'oldPassword': oldPassword,
+      'newPassword': newPassword,
+
+    };
+
+    return await client
+        .put(Hosting.host + 'password/changeuserpassword', headers: headers)
+        .then((response) {
+      if (response.statusCode < 200 || response.statusCode >= 400) {
+        return null;
+      } else {
+        return Traveler.fromJson(json.decode(response.body));
+      }
+    });
+  }
+
   Future<Traveler> findByEmail(String email) async {
     final client = http.Client();
     final headers = {

@@ -29,6 +29,7 @@ class InformationPageState extends State<InformationPage> {
 
   final _password = TextEditingController();
   final _reenterPassword = TextEditingController();
+  final _oldPassword = TextEditingController();
   final _firstName = TextEditingController();
   final _lastName = TextEditingController();
   final _personalId = TextEditingController();
@@ -130,6 +131,14 @@ class InformationPageState extends State<InformationPage> {
       ),
     );
 
+    final _oldPasswordField = TextFormField(
+      autocorrect: false,
+      obscureText: true,
+      controller: _oldPassword,
+      decoration: InputDecoration(labelText: 'Old password'),
+      validator: Validator.validatePassword,
+    );
+
     final _passwordField = TextFormField(
       autocorrect: false,
       obscureText: true,
@@ -153,6 +162,7 @@ class InformationPageState extends State<InformationPage> {
               autovalidate: true,
               child: Column(
                 children: <Widget>[
+                  _oldPasswordField,
                   _passwordField,
                   _passwordConfirmField,
                 ],
@@ -520,7 +530,8 @@ class InformationPageState extends State<InformationPage> {
                                   Expanded(
                                     child: Container(
                                       child: TypeAheadField(
-                                        textFieldConfiguration: TextFieldConfiguration(
+                                        textFieldConfiguration:
+                                            TextFieldConfiguration(
                                           enabled: isEnable,
                                           style: TextStyle(
                                             color: Colors.black87,
@@ -541,8 +552,8 @@ class InformationPageState extends State<InformationPage> {
                                             title: Text(suggestion),
                                           );
                                         },
-                                        transitionBuilder:
-                                            (context, suggestionsBox, controller) {
+                                        transitionBuilder: (context,
+                                            suggestionsBox, controller) {
                                           return suggestionsBox;
                                         },
                                         onSuggestionSelected: (suggestion) {
@@ -575,7 +586,8 @@ class InformationPageState extends State<InformationPage> {
                                   Expanded(
                                     child: Container(
                                       child: TypeAheadField(
-                                        textFieldConfiguration: TextFieldConfiguration(
+                                        textFieldConfiguration:
+                                            TextFieldConfiguration(
                                           enabled: isEnable,
                                           style: TextStyle(
                                             color: Colors.black87,
@@ -596,8 +608,8 @@ class InformationPageState extends State<InformationPage> {
                                             title: Text(suggestion),
                                           );
                                         },
-                                        transitionBuilder:
-                                            (context, suggestionsBox, controller) {
+                                        transitionBuilder: (context,
+                                            suggestionsBox, controller) {
                                           return suggestionsBox;
                                         },
                                         onSuggestionSelected: (suggestion) {
@@ -645,12 +657,14 @@ class InformationPageState extends State<InformationPage> {
                                         vertical: 10, horizontal: 0),
                                     child: InkWell(
                                       onTap: () {
-                                        dialogs.confirm2(
+                                        dialogs.confirm3(
                                             context,
                                             'Change Your Password',
                                             _confirmWidget,
-                                            'NO',
-                                            'CHANGE');
+                                            'NO', () {
+                                          Navigator.of(context).pop();
+                                          changePass();
+                                        });
                                       },
                                       child: Text(
                                         'Change password',
@@ -757,6 +771,26 @@ class InformationPageState extends State<InformationPage> {
           account = data;
           return account;
         });
+      }
+    });
+  }
+
+  void changePass() {
+    NLDialog.showLoading(context);
+    TravellerController controller = TravellerController();
+    controller
+        .changePassword1(account.email, _oldPassword.text, _password.text)
+        .then((data) {
+      Navigator.pop(context);
+      print(account.email);
+      print(_oldPassword.text);
+      print(_password.text);
+      if (data != null) {
+        setState(() {
+          account = data;
+        });
+      } else {
+        NLDialog.showInfo(context, 'Change password failed', 'Oops.. sorry!');
       }
     });
   }
