@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class NLAppBar {
 
-  static PreferredSize buildAppBar(BuildContext context) {
+  static PreferredSize buildAppBar(BuildContext context, String title) {
     final appBar = PreferredSize(
       preferredSize: Size(double.infinity, 100.0),
       child: Container(
@@ -29,7 +29,7 @@ class NLAppBar {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           title: Text(
-            "NLTour",
+            title,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           centerTitle: true,

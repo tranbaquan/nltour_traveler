@@ -65,7 +65,7 @@ class MessagePageState extends State<MessagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NLAppBar.buildAppBar(context),
+      appBar: NLAppBar.buildAppBar(context, 'Message'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(

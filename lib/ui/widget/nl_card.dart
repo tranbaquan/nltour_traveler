@@ -6,9 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:nltour_traveler/controller/place_controller.dart';
 import 'package:nltour_traveler/controller/tour_controller.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
+import 'package:nltour_traveler/model/collaborator.dart';
 import 'package:nltour_traveler/model/place.dart';
 import 'package:nltour_traveler/model/tour.dart';
 import 'package:nltour_traveler/model/traveler.dart';
+import 'package:nltour_traveler/model/type.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_dialog.dart';
 import 'package:nltour_traveler/utils/dialog.dart';
@@ -124,111 +126,116 @@ class NLHistory extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: 150,
-            height: 150,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[500],
-                  offset: Offset(1.5, 0),
-                  blurRadius: 1.5,
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.network(
-                tour.place.imageUrl,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    tour.place.name,
-                    style: TextStyle(fontFamily: 'Normal'),
-                  ),
-                  Text(
-                    "Guide: " +
-                        (tour.tourGuide == null
-                            ? "Finding tour guide"
-                            : tour.traveler.lastName +
-                                " " +
-                                tour.traveler.firstName),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'Semilight',
-                    ),
-                  ),
-                  Text(
-                    "Price: " + tour.price.toString(),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'Semilight',
-                    ),
-                  ),
-                  Text(
-                    "Date: " + dateFormat.format(tour.startDate),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'Semilight',
-                    ),
-                  ),
-                  Text(
-                    "Status: " + getStatus(),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'Semilight',
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      tour.tourGuide != null
-                          ? RaisedOutlineButton(
-                              height: 25,
-                              onPressed: () {},
-                              child: Text(
-                                'Contact Guide',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            )
-                          : RaisedOutlineButton(
-                              height: 25,
-                              onPressed: () {},
-                              child: Text(
-                                'Pay for tour',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                    ],
+      child: GestureDetector(
+        onTap: () {
+          tour.tourGuide == null ? showPending(context) : print('abc');
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey[500],
+                    offset: Offset(1.5, 0),
+                    blurRadius: 1.5,
                   ),
                 ],
               ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.network(
+                  tour.place.imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      tour.place.name,
+                      style: TextStyle(fontFamily: 'Normal'),
+                    ),
+                    Text(
+                      "Guide: " +
+                          (tour.tourGuide == null
+                              ? "Finding tour guide"
+                              : tour.tourGuide.lastName +
+                                  " " +
+                                  tour.tourGuide.firstName),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'Semilight',
+                      ),
+                    ),
+                    Text(
+                      "Price: " + tour.price.toString(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'Semilight',
+                      ),
+                    ),
+                    Text(
+                      "Date: " + dateFormat.format(tour.startDate),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'Semilight',
+                      ),
+                    ),
+                    Text(
+                      "Status: " + getStatus(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'Semilight',
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        tour.tourGuide != null
+                            ? RaisedOutlineButton(
+                                height: 25,
+                                onPressed: () {},
+                                child: Text(
+                                  'Contact Guide',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              )
+                            : RaisedOutlineButton(
+                                height: 25,
+                                onPressed: () {},
+                                child: Text(
+                                  'Pay for tour',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
     return widget;
@@ -243,6 +250,113 @@ class NLHistory extends StatelessWidget {
       return "Completed";
     }
   }
+
+  void showPending(BuildContext context) {
+    var content = Container(
+      child: FutureBuilder(
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView(
+              children: snapshot.data,
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+        future: getPendingGuild(),
+      ),
+    );
+    NLDialog.showCustomContentDialog(context, 'Registering', content);
+  }
+
+  getPendingGuild() async {
+    TourController controller = TourController();
+    var res = List<Widget>();
+    List<Collaborator> collaborators =
+        await controller.getRegisteringTours(this.tour.id);
+    for (Collaborator c in collaborators) {
+      var row = Container(
+        padding: EdgeInsets.only(left: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              "Tour guide: " + c.firstName + " " + c.lastName,
+              style: TextStyle(fontSize: 12),
+            ),
+            Text(
+              "Gender: " + (c.gender == Gender.MALE ? 'Male' : 'Female'),
+              style: TextStyle(fontSize: 12),
+            ),
+            Text(
+              "Type: " + getTourGiudeType(c.type),
+              style: TextStyle(fontSize: 12),
+            ),
+            Text(
+              "Languages: " + c.languages.primaryLanguage,
+              style: TextStyle(fontSize: 12),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                SimpleRoundButton(
+                  onPressed: () {
+                    goToMessage(c.email);
+                  },
+                  btnText: 'Message',
+                  btnHeight: 30,
+                  btnWidth: 80,
+                  backgroundColor: Color(0xFF3eb43e),
+                  roundColor: Color(0xFF3eb43e),
+                  textColor: Colors.white,
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 5),
+                  child: SimpleRoundButton(
+                    onPressed: () {
+                      acceptGuide(c.email);
+                    },
+                    btnText: 'Get',
+                    btnHeight: 30,
+                    btnWidth: 80,
+                    backgroundColor: Color(0xFF008fe5),
+                    roundColor: Color(0xFF008fe5),
+                    textColor: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+      var divider = Divider(
+        color: Color(0xff383838),
+        indent: 19.0,
+      );
+      res.add(row);
+      res.add(divider);
+    }
+    return res;
+  }
+
+  String getTourGiudeType(TourGuideType type) {
+    if (type == TourGuideType.FREELANCER) return 'Freelacer';
+    if (type == TourGuideType.PROFESSOR) return 'Professor';
+    if (type == TourGuideType.RESIDENT) return 'Resident';
+    if (type == TourGuideType.STUDENT) return 'Student';
+    return '';
+  }
+
+  void goToMessage(String email) {
+    //TODO
+  }
+
+  void acceptGuide(String email) {
+
+  }
 }
 
 class NLCardPlaceExpand extends StatelessWidget {
@@ -252,7 +366,7 @@ class NLCardPlaceExpand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final widget = Container(
+    Widget widget = Container(
       height: 150,
       padding: EdgeInsets.zero,
       decoration: BoxDecoration(
@@ -522,4 +636,3 @@ class _NLCardFormState extends State<NLCardForm> {
     return t;
   }
 }
-

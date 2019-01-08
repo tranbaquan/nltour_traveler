@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,23 +34,9 @@ class InformationPageState extends State<InformationPage> {
   final _personalId = TextEditingController();
   final _country = TextEditingController();
   final _languages = TextEditingController();
-  List _genders = [Gender.MALE, Gender.FEMALE];
-  Gender _currentGender;
-  File _image;
+  final _dob = TextEditingController();
   final dateFormat = DateFormat('MMM dd, yyyy');
   final autoComplete = CountryAutoComplete();
-  DateTime _dateTime = new DateTime.now();
-
-  List<RadioModel> sampleData = new List<RadioModel>();
-
-  @override
-  void initState() {
-    sampleData.add(
-        new RadioModel(account.gender == Gender.MALE ? false : true, 'men'));
-    sampleData.add(
-        new RadioModel(account.gender == Gender.MALE ? true : false, 'women'));
-    super.initState();
-  }
 
   Future<Traveler> loadData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -61,7 +46,14 @@ class InformationPageState extends State<InformationPage> {
       print(json.encode(data));
       if (data != null) {
         account = data;
-        _dateTime = account.dob;
+        _password.text = account.password;
+        _reenterPassword.text = account.password;
+        _firstName.text = account.firstName;
+        _lastName.text = account.lastName;
+        _personalId.text = account.personalID;
+        _country.text = account.address.country;
+        _languages.text = account.languages.primaryLanguage;
+        _dob.text = dateFormat.format(account.dob);
         return account;
       } else {
         return null;
@@ -70,16 +62,19 @@ class InformationPageState extends State<InformationPage> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: _dateTime,
-        firstDate: DateTime(1970),
-        lastDate: DateTime(2020));
-    if (picked != null && picked != _dateTime) {
-      setState(() {
-        _dateTime = picked;
-      });
-    }
+    showDatePicker(
+      context: context,
+      initialDate: account.dob,
+      firstDate: DateTime(1970),
+      lastDate: DateTime(2020),
+    ).then((data) {
+      if (data != null) {
+        setState(() {
+          account.dob = data;
+          _dob.text = dateFormat.format(account.dob);
+        });
+      }
+    });
   }
 
   @override
@@ -285,17 +280,13 @@ class InformationPageState extends State<InformationPage> {
                                       child: TextFormField(
                                         enabled: isEnable,
                                         style: TextStyle(
-                                          color: Color(0xff008fe5),
+                                          color: Colors.black87,
                                           fontSize: 14.0,
                                           fontFamily: 'Semilight',
                                         ),
                                         controller: _firstName,
                                         validator: Validator.notEmpty,
                                         decoration: InputDecoration(
-                                          hintText: account.firstName,
-                                          hintStyle: TextStyle(
-                                            color: Color(0xff000000),
-                                          ),
                                           border: InputBorder.none,
                                         ),
                                       ),
@@ -327,17 +318,13 @@ class InformationPageState extends State<InformationPage> {
                                       child: TextFormField(
                                         enabled: isEnable,
                                         style: TextStyle(
-                                          color: Color(0xff008fe5),
+                                          color: Colors.black87,
                                           fontSize: 14.0,
                                           fontFamily: 'Semilight',
                                         ),
                                         validator: Validator.notEmpty,
                                         controller: _lastName,
                                         decoration: InputDecoration(
-                                          hintText: account.lastName,
-                                          hintStyle: TextStyle(
-                                            color: Color(0xff000000),
-                                          ),
                                           border: InputBorder.none,
                                         ),
                                       ),
@@ -411,26 +398,24 @@ class InformationPageState extends State<InformationPage> {
                                           MainAxisAlignment.start,
                                       children: <Widget>[
                                         InkWell(
-                                          child: RadioItemButton(sampleData[0]),
+                                          child: RadioItemButton(
+                                            RadioModel(
+                                                account.gender == Gender.MALE
+                                                    ? true
+                                                    : false,
+                                                'men'),
+                                          ),
                                           splashColor: Color(0xff008fe5),
-                                          onTap: () {
-                                            setState(() {
-                                              sampleData.forEach((element) =>
-                                                  element.isSelected = false);
-                                              sampleData[0].isSelected = true;
-                                            });
-                                          },
                                         ),
                                         InkWell(
-                                          child: RadioItemButton(sampleData[1]),
+                                          child: RadioItemButton(
+                                            RadioModel(
+                                                account.gender == Gender.FEMALE
+                                                    ? true
+                                                    : false,
+                                                'women'),
+                                          ),
                                           splashColor: Color(0xff008fe5),
-                                          onTap: () {
-                                            setState(() {
-                                              sampleData.forEach((element) =>
-                                                  element.isSelected = false);
-                                              sampleData[1].isSelected = true;
-                                            });
-                                          },
                                         ),
                                       ],
                                     ),
@@ -462,16 +447,12 @@ class InformationPageState extends State<InformationPage> {
                                         onTap: () => _selectDate(context),
                                         enabled: isEnable,
                                         style: TextStyle(
-                                          color: Color(0xff008fe5),
+                                          color: Colors.black87,
                                           fontSize: 14.0,
                                           fontFamily: 'Semilight',
                                         ),
+                                        controller: _dob,
                                         decoration: InputDecoration(
-                                          hintText:
-                                              isEnable ? dateFormat.format(account.dob) : dateFormat.format(_dateTime),
-                                          hintStyle: TextStyle(
-                                            color: Color(0xff000000),
-                                          ),
                                           border: InputBorder.none,
                                         ),
                                       ),
@@ -504,16 +485,12 @@ class InformationPageState extends State<InformationPage> {
                                         enabled: isEnable,
                                         validator: Validator.notEmpty,
                                         style: TextStyle(
-                                          color: Color(0xff008fe5),
+                                          color: Colors.black87,
                                           fontSize: 14.0,
                                           fontFamily: 'Semilight',
                                         ),
                                         controller: _personalId,
                                         decoration: InputDecoration(
-                                          hintText: account.personalID,
-                                          hintStyle: TextStyle(
-                                            color: Color(0xff000000),
-                                          ),
                                           border: InputBorder.none,
                                         ),
                                       ),
@@ -543,19 +520,14 @@ class InformationPageState extends State<InformationPage> {
                                   Expanded(
                                     child: Container(
                                       child: TypeAheadField(
-                                        textFieldConfiguration:
-                                            TextFieldConfiguration(
+                                        textFieldConfiguration: TextFieldConfiguration(
                                           enabled: isEnable,
                                           style: TextStyle(
-                                            color: Color(0xff008fe5),
+                                            color: Colors.black87,
                                             fontSize: 14.0,
                                             fontFamily: 'Semilight',
                                           ),
                                           decoration: InputDecoration(
-                                            hintText: account.address.country,
-                                            hintStyle: TextStyle(
-                                              color: Color(0xff000000),
-                                            ),
                                             border: InputBorder.none,
                                           ),
                                           controller: _country,
@@ -569,8 +541,8 @@ class InformationPageState extends State<InformationPage> {
                                             title: Text(suggestion),
                                           );
                                         },
-                                        transitionBuilder: (context,
-                                            suggestionsBox, controller) {
+                                        transitionBuilder:
+                                            (context, suggestionsBox, controller) {
                                           return suggestionsBox;
                                         },
                                         onSuggestionSelected: (suggestion) {
@@ -603,20 +575,14 @@ class InformationPageState extends State<InformationPage> {
                                   Expanded(
                                     child: Container(
                                       child: TypeAheadField(
-                                        textFieldConfiguration:
-                                            TextFieldConfiguration(
+                                        textFieldConfiguration: TextFieldConfiguration(
                                           enabled: isEnable,
                                           style: TextStyle(
-                                            color: Color(0xff008fe5),
+                                            color: Colors.black87,
                                             fontSize: 14.0,
                                             fontFamily: 'Semilight',
                                           ),
                                           decoration: InputDecoration(
-                                            hintText: account
-                                                .languages.primaryLanguage,
-                                            hintStyle: TextStyle(
-                                              color: Color(0xff000000),
-                                            ),
                                             border: InputBorder.none,
                                           ),
                                           controller: _languages,
@@ -630,8 +596,8 @@ class InformationPageState extends State<InformationPage> {
                                             title: Text(suggestion),
                                           );
                                         },
-                                        transitionBuilder: (context,
-                                            suggestionsBox, controller) {
+                                        transitionBuilder:
+                                            (context, suggestionsBox, controller) {
                                           return suggestionsBox;
                                         },
                                         onSuggestionSelected: (suggestion) {
@@ -767,13 +733,17 @@ class InformationPageState extends State<InformationPage> {
   Future<Traveler> updateUser() async {
     var controller = TravellerController();
     final prefs = await SharedPreferences.getInstance();
-    account.languages.primaryLanguage = _languages.text.isEmpty ? account.languages.primaryLanguage : _languages.text.isEmpty;
-    account.dob = _dateTime;
-    account.gender = sampleData[0].isSelected ? Gender.MALE : Gender.FEMALE;
-    account.address.country = _country.text.isEmpty ? account.address.country : _country.text;
-    account.personalID = _personalId.text.isEmpty ? account.personalID : _personalId.text;
-    account.firstName = _firstName.text.isEmpty ? account.firstName : _firstName.text;
-    account.lastName = _lastName.text.isEmpty ? account.lastName : _lastName.text;
+    account.languages.primaryLanguage = _languages.text.isEmpty
+        ? account.languages.primaryLanguage
+        : _languages.text;
+    account.address.country =
+        _country.text.isEmpty ? account.address.country : _country.text;
+    account.personalID =
+        _personalId.text.isEmpty ? account.personalID : _personalId.text;
+    account.firstName =
+        _firstName.text.isEmpty ? account.firstName : _firstName.text;
+    account.lastName =
+        _lastName.text.isEmpty ? account.lastName : _lastName.text;
 
     return controller.update(account).then((data) {
       print(json.encode(data));
