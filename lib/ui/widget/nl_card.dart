@@ -209,9 +209,11 @@ class NLHistory extends StatelessWidget {
                         tour.tourGuide != null
                             ? RaisedOutlineButton(
                                 height: 25,
-                                onPressed: () {},
+                                onPressed: () {
+                                  goToMessage(context, tour.tourGuide);
+                                },
                                 child: Text(
-                                  'Contact Guide',
+                                  'Contact',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,
@@ -229,6 +231,19 @@ class NLHistory extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                        tour.tourGuide == null
+                            ? SimpleRoundButton(
+                                btnHeight: 25,
+                                btnWidth: 80,
+                                btnText: 'Cancel',
+                                textColor: Color(0xFF3eb43e),
+                                roundColor: Color(0xFF3eb43e),
+                                backgroundColor: Colors.white,
+                                onPressed: () {
+                                  cancelTour(context);
+                                },
+                              )
+                            : Container(),
                       ],
                     ),
                   ],
@@ -361,16 +376,20 @@ class NLHistory extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) => MessagePage(
-              traveler: data,
-              collaborator: collborator,
-            )),
+                  traveler: data,
+                  collaborator: collborator,
+                )),
       );
     });
-
   }
 
-  void acceptGuide(String email) {
+  void acceptGuide(String email) {}
 
+  cancelTour(BuildContext context) async {
+    NLDialog.showLoading(context);
+    TourController controller = TourController();
+    await controller.cancelTour(tour.id);
+    Navigator.of(context).pop();
   }
 }
 

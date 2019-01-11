@@ -83,4 +83,15 @@ class TourController {
       }
     });
   }
+
+  Future cancelTour(String id) async {
+    final client = http.Client();
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'id': id,
+    };
+
+    return await client.delete(Hosting.tour, headers: headers);
+  }
 }

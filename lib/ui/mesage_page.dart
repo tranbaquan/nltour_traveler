@@ -1,10 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/model/collaborator.dart';
-import 'package:nltour_traveler/model/message.dart';
 import 'package:nltour_traveler/model/traveler.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessagePage extends StatefulWidget {
   final Collaborator collaborator;
@@ -22,7 +21,6 @@ class MessagePage extends StatefulWidget {
 class MessagePageState extends State<MessagePage> {
   CollectionReference messageReference;
   CollectionReference messageReference1;
-  List<Message> messages = [];
   final _message = TextEditingController();
 
   @override
@@ -33,10 +31,6 @@ class MessagePageState extends State<MessagePage> {
         '/' +
         widget.collaborator.personalID);
 
-    messageReference = Firestore.instance.collection('message/' +
-        widget.collaborator.personalID +
-        '/' +
-        widget.traveler.personalID);
   }
 
   @override
@@ -93,11 +87,11 @@ class MessagePageState extends State<MessagePage> {
                                                 ),
                                                 Container(
                                                   margin: EdgeInsets.all(2),
-                                                  padding: EdgeInsets.all(6),
+                                                  padding: EdgeInsets.all(10),
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            15),
+                                                            20),
                                                     color: Color(0xff008fe5),
                                                   ),
                                                   child: Text(
@@ -217,7 +211,7 @@ class MessagePageState extends State<MessagePage> {
 
   void sendMessage() {
     messageReference
-        .add({'email': widget.traveler.personalID, 'content': _message.text});
+        .add({'email': widget.traveler.email, 'content': _message.text});
     setState(() {
       _message.clear();
     });
