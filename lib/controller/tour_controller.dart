@@ -1,5 +1,5 @@
-import 'package:nltour_traveler/model/collaborator.dart';
-import 'package:nltour_traveler/model/tour.dart';
+import 'package:nltour_traveler/model/collaborator/collaborator.dart';
+import 'package:nltour_traveler/model/tour/tour.dart';
 import 'package:http/http.dart' as http;
 import 'package:nltour_traveler/network/host.dart';
 import 'dart:convert';

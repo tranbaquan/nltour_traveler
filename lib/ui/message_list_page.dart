@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
-import 'package:nltour_traveler/model/traveler.dart';
+import 'package:nltour_traveler/model/traveler/traveler.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 import 'package:nltour_traveler/ui/widget/nl_menu_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'address.g.dart';
+part 'package:nltour_traveler/model/common/address.g.dart';
 
 @JsonSerializable()
 class Address {

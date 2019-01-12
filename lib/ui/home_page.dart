@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/place_controller.dart';
 import 'package:nltour_traveler/controller/tour_controller.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
-import 'package:nltour_traveler/model/place.dart';
-import 'package:nltour_traveler/model/tour.dart';
-import 'package:nltour_traveler/model/traveler.dart';
+import 'package:nltour_traveler/model/tour/place.dart';
+import 'package:nltour_traveler/model/tour/tour.dart';
+import 'package:nltour_traveler/model/traveler/traveler.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 import 'package:nltour_traveler/ui/widget/nl_card.dart';
 import 'package:nltour_traveler/ui/widget/nl_menu_card.dart';
@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
 
     final widget4 = Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
-      child: NLCardForm(),
+      child: NLFormCard(),
     );
     return Scaffold(
       appBar: NLAppbar.buildAppbar(context, 'NLTour'),

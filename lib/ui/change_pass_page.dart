@@ -1,10 +1,10 @@
 import 'package:device_id/device_id.dart';
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
-import 'package:nltour_traveler/supporter/validator.dart';
+import 'package:nltour_traveler/supporter/validator/validator.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
-import 'package:nltour_traveler/ui/widget/nl_form.dart';
+import 'package:nltour_traveler/ui/widget/nl_form_field.dart';
 import 'package:nltour_traveler/utils/dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,14 +37,14 @@ class ChangePassPageState extends State<ChangePassPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  TextInputForm(
+                  TextInputFormField(
                     validator: Validator.validatePassword,
                     textAlign: TextAlign.left,
                     controller: _pass,
                     obscureText: true,
                     hintText: "Enter your new password",
                   ),
-                  TextInputForm(
+                  TextInputFormField(
                     validator: (value) {
                       if (value != _pass.text) {
                         return "Password is not match!";
@@ -57,7 +57,7 @@ class ChangePassPageState extends State<ChangePassPage> {
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 16),
-                    child: RaisedGradientRoundedButton(
+                    child: NLRaisedGradientRoundedButton(
                       child: Text(
                         "Change Password",
                         style: TextStyle(

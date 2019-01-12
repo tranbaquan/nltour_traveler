@@ -15,7 +15,7 @@ class Validator {
   }
 
   static String notEmpty(String value) {
-    if(value.isEmpty) return "Not be empty";
+    if(value.isEmpty) return "Field not be empty";
     return null;
   }
 }

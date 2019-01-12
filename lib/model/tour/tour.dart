@@ -1,9 +1,9 @@
-import 'package:nltour_traveler/model/collaborator.dart';
-import 'package:nltour_traveler/model/place.dart';
-import 'package:nltour_traveler/model/traveler.dart';
+import 'package:nltour_traveler/model/collaborator/collaborator.dart';
+import 'package:nltour_traveler/model/tour/place.dart';
+import 'package:nltour_traveler/model/traveler/traveler.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'tour.g.dart';
+part 'package:nltour_traveler/model/tour/tour.g.dart';
 
 @JsonSerializable()
 class Tour {

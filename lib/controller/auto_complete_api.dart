@@ -12,6 +12,7 @@ class CountryAutoComplete {
         return [];
       } else {
         List list = json.decode(response.body) as List;
+        if(list.length == 0) return [];
         return list.map((m) => m['name'] as String).toList();
       }
     });
@@ -44,6 +45,4 @@ class LanguagesData {
   String nativeName;
 
   LanguagesData(this.iso639_1, this.iso639_2, this.name, this.nativeName);
-
-
 }

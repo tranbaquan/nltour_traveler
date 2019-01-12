@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'message.g.dart';
+part 'package:nltour_traveler/model/message/message.g.dart';
 
 @JsonSerializable()
 class Message {

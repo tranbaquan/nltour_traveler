@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
-import 'package:nltour_traveler/model/traveler.dart';
-import 'package:nltour_traveler/supporter/auth.dart';
-import 'package:nltour_traveler/supporter/validator.dart';
+import 'package:nltour_traveler/model/traveler/traveler.dart';
+import 'package:nltour_traveler/supporter/database/database.dart';
+import 'package:nltour_traveler/supporter/validator/validator.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
-import 'package:nltour_traveler/ui/widget/nl_form.dart';
+import 'package:nltour_traveler/ui/widget/nl_form_field.dart';
 import 'package:nltour_traveler/utils/dialog.dart';
+import 'package:nltour_traveler/utils/session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,18 +22,16 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
-  var authStateProvider = new AuthStateProvider();
 
   @override
   void initState() {
-    check();
+    checkSession();
     super.initState();
   }
 
-  Future check() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool isLogged = prefs.get('logged');
-    if (isLogged != null && isLogged) {
+  checkSession() async {
+    bool isLogged = await SessionChecker.isLogged();
+    if (isLogged) {
       Navigator.of(context).pushReplacementNamed("/home");
     }
   }
@@ -46,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              buildBackGround(context),
+              buildBackground(context),
               buildLoginForm(context)
             ],
           ),
@@ -55,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildBackGround(BuildContext context) {
+  Widget buildBackground(BuildContext context) {
     return Container(
       child: Stack(
         alignment: AlignmentDirectional(0, 2),
@@ -70,8 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
-            child: Image.network(
-              'https://firebasestorage.googleapis.com/v0/b/nltour-2018.appspot.com/o/travel.jpg?alt=media&token=1effd6f7-0ac3-4b68-b758-48c4bcf71465',
+            child: Image.asset('assets/images/travel.jpg',
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.cover,
               height: 240,
@@ -92,14 +90,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget buildLoginForm(BuildContext context) {
-    final usernameInput = TextInputForm(
+    final usernameInput = TextInputFormField(
       hintText: 'USERNAME',
       validator: Validator.validateEmail,
       controller: _email,
       keyboardType: TextInputType.emailAddress,
     );
 
-    final passwordInput = TextInputForm(
+    final passwordInput = TextInputFormField(
       obscureText: true,
       hintText: 'PASSWORD',
       controller: _password,
@@ -124,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final loginButton = RaisedGradientRoundedButton(
+    final loginButton = NLRaisedGradientRoundedButton(
       child: Text(
         'LOGIN',
         style: TextStyle(color: Colors.white),
@@ -139,15 +137,15 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
 
-    final registerButton = RaisedOutlineRoundedButton(
+    final registerButton = NLRaisedOutlineRoundedButton(
       child: Text(
         'REGISTER',
         style: TextStyle(
           color: Color(0xFF3eb43e),
         ),
       ),
-      height: 40.0,
-      minWidth: MediaQuery.of(context).size.width,
+      height: 40,
+      minWidth: double.infinity,
       onPressed: () {
         Navigator.of(context).pushNamed('/register');
       },
@@ -161,12 +159,12 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           Container(
             height: 60,
-            margin: EdgeInsets.only(bottom: 10.0),
+            margin: EdgeInsets.only(bottom: 10),
             child: usernameInput,
           ),
           Container(
             height: 60,
-            margin: EdgeInsets.only(bottom: 10.0),
+            margin: EdgeInsets.only(bottom: 10),
             child: passwordInput,
           ),
           Container(
@@ -188,7 +186,6 @@ class _LoginPageState extends State<LoginPage> {
   _login() async {
     final Traveler traveler =
         Traveler(email: _email.text, password: _password.text);
-    print(json.encode(traveler));
     var controller = TravellerController();
     controller.login(traveler).then((data) {
       Navigator.of(context).pop();
@@ -205,9 +202,7 @@ class _LoginPageState extends State<LoginPage> {
   void _saveUser(Traveler data) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('logged', true);
-    prefs.setString('email', data.email);
-    prefs.setString('avatar', data.avatar);
-    prefs.setString('firstName', data.firstName);
-    prefs.setString('lastName', data.lastName);
+    await DatabaseProvider.db.deleteAll();
+    await DatabaseProvider.db.addTraveler(data);
   }
 }

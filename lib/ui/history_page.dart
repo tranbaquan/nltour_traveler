@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/tour_controller.dart';
-import 'package:nltour_traveler/model/tour.dart';
+import 'package:nltour_traveler/model/tour/tour.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 import 'package:nltour_traveler/ui/widget/nl_card.dart';
 import 'package:nltour_traveler/ui/widget/nl_menu_card.dart';
@@ -53,7 +53,7 @@ class HistoryPageState extends State<HistoryPage> {
     for (Tour tour in tours) {
       final card = Container(
           margin: EdgeInsets.only(bottom: 10),
-          child: NLHistory(
+          child: NLHistoryCard(
             tour: tour,
           ));
       res.add(card);

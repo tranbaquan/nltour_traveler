@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nltour_traveler/model/collaborator.dart';
-import 'package:nltour_traveler/model/traveler.dart';
+import 'package:nltour_traveler/model/collaborator/collaborator.dart';
+import 'package:nltour_traveler/model/traveler/traveler.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 
 class MessagePage extends StatefulWidget {

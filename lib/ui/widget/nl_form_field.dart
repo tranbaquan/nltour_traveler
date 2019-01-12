@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TextInputForm extends StatelessWidget {
+class TextInputFormField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final double fontSize;
@@ -8,8 +8,9 @@ class TextInputForm extends StatelessWidget {
   final Function validator;
   final TextInputType keyboardType;
   final TextEditingController controller;
+  final TextCapitalization textCapitalization;
 
-  const TextInputForm(
+  const TextInputFormField(
       {Key key,
       this.hintText,
       this.obscureText = false,
@@ -17,7 +18,8 @@ class TextInputForm extends StatelessWidget {
       this.textAlign = TextAlign.center,
       this.validator,
       this.keyboardType = TextInputType.text,
-      this.controller})
+      this.controller,
+      this.textCapitalization = TextCapitalization.none})
       : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class TextInputForm extends StatelessWidget {
       ),
       textAlign: textAlign,
       keyboardType: keyboardType,
+      textCapitalization: TextCapitalization.words,
     );
   }
 }

@@ -1,7 +1,7 @@
-import 'package:nltour_traveler/model/address.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:nltour_traveler/model/common/address.dart';
 
-part 'place.g.dart';
+part 'package:nltour_traveler/model/tour/place.g.dart';
 
 @JsonSerializable()
 class Place {

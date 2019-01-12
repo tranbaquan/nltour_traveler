@@ -1,7 +1,7 @@
-import 'package:nltour_traveler/model/type.dart';
+import 'package:nltour_traveler/model/collaborator/type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'price.g.dart';
+part 'package:nltour_traveler/model/tour/price.g.dart';
 
 @JsonSerializable()
 class Price {

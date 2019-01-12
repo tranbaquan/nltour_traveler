@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'languages.g.dart';
+part 'package:nltour_traveler/model/common/languages.g.dart';
 
 @JsonSerializable()
 class Languages {

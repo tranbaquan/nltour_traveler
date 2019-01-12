@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:nltour_traveler/model/place.dart';
+import 'package:nltour_traveler/model/tour/place.dart';
 import 'package:nltour_traveler/network/host.dart';
 import 'dart:convert';
 

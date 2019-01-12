@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nltour_traveler/model/place.dart';
+import 'package:nltour_traveler/model/tour/place.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 
 class Dialogs {
@@ -43,12 +43,12 @@ class Dialogs {
             child: widget,
           ),
           actions: <Widget>[
-            SimpleButton(
+            NLSimpleButton(
               btnText: 'NO',
               textColor: Color(0xff008fe5),
               onPress: () => _confirmResult(false, context),
             ),
-            SimpleRoundButton(
+            NLSimpleRoundedButton(
               btnText: 'GET TOUR',
               btnWidth: 85.0,
               btnHeight: 35.0,
@@ -75,12 +75,12 @@ class Dialogs {
             child: widget,
           ),
           actions: <Widget>[
-            SimpleButton(
+            NLSimpleButton(
               btnText: txtNO,
               textColor: Color(0xff008fe5),
               onPress: () => _confirmResult(false, context),
             ),
-            SimpleRoundButton(
+            NLSimpleRoundedButton(
               btnText: txtAGREE,
               btnWidth: 85.0,
               btnHeight: 35.0,
@@ -107,12 +107,12 @@ class Dialogs {
             child: widget,
           ),
           actions: <Widget>[
-            SimpleButton(
+            NLSimpleButton(
               btnText: txtNO,
               textColor: Color(0xff008fe5),
               onPress: () => _confirmResult(false, context),
             ),
-            SimpleRoundButton(
+            NLSimpleRoundedButton(
               btnText: 'Change',
               btnWidth: 85.0,
               btnHeight: 35.0,

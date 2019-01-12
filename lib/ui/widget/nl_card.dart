@@ -6,11 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:nltour_traveler/controller/place_controller.dart';
 import 'package:nltour_traveler/controller/tour_controller.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
-import 'package:nltour_traveler/model/collaborator.dart';
-import 'package:nltour_traveler/model/place.dart';
-import 'package:nltour_traveler/model/tour.dart';
-import 'package:nltour_traveler/model/traveler.dart';
-import 'package:nltour_traveler/model/type.dart';
+import 'package:nltour_traveler/model/collaborator/collaborator.dart';
+import 'package:nltour_traveler/model/tour/place.dart';
+import 'package:nltour_traveler/model/tour/tour.dart';
+import 'package:nltour_traveler/model/traveler/traveler.dart';
+import 'package:nltour_traveler/model/collaborator/type.dart';
+import 'package:nltour_traveler/supporter/validator/validator.dart';
 import 'package:nltour_traveler/ui/mesage_page.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_dialog.dart';
@@ -71,13 +72,13 @@ class NLPlaceCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   verticalDirection: VerticalDirection.up,
                   children: <Widget>[
-                    RaisedOutlineButton(
+                    NLRaisedOutlineButton(
                       height: 25,
                       onPressed: () {
                         NLDialog.showCustomContentDialog(
                             context,
                             'Book tour',
-                            NLCardForm(
+                            NLFormCard(
                               place: place,
                             ));
                       },
@@ -105,10 +106,10 @@ class NLPlaceCard extends StatelessWidget {
   }
 }
 
-class NLHistory extends StatelessWidget {
+class NLHistoryCard extends StatelessWidget {
   final Tour tour;
 
-  const NLHistory({Key key, this.tour}) : super(key: key);
+  const NLHistoryCard({Key key, this.tour}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +208,7 @@ class NLHistory extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         tour.tourGuide != null
-                            ? RaisedOutlineButton(
+                            ? NLRaisedOutlineButton(
                                 height: 25,
                                 onPressed: () {
                                   goToMessage(context, tour.tourGuide);
@@ -220,7 +221,7 @@ class NLHistory extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            : RaisedOutlineButton(
+                            : NLRaisedOutlineButton(
                                 height: 25,
                                 onPressed: () {},
                                 child: Text(
@@ -232,7 +233,7 @@ class NLHistory extends StatelessWidget {
                                 ),
                               ),
                         tour.tourGuide == null
-                            ? SimpleRoundButton(
+                            ? NLSimpleRoundedButton(
                                 btnHeight: 25,
                                 btnWidth: 80,
                                 btnText: 'Cancel',
@@ -319,7 +320,7 @@ class NLHistory extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                SimpleRoundButton(
+                NLSimpleRoundedButton(
                   onPressed: () {
                     goToMessage(context, c);
                   },
@@ -332,7 +333,7 @@ class NLHistory extends StatelessWidget {
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 5),
-                  child: SimpleRoundButton(
+                  child: NLSimpleRoundedButton(
                     onPressed: () {
                       acceptGuide(c.email);
                     },
@@ -393,10 +394,10 @@ class NLHistory extends StatelessWidget {
   }
 }
 
-class NLCardPlaceExpand extends StatelessWidget {
+class NLPlaceBigCard extends StatelessWidget {
   final Place place;
 
-  const NLCardPlaceExpand({Key key, this.place}) : super(key: key);
+  const NLPlaceBigCard({Key key, this.place}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -466,7 +467,7 @@ class NLCardPlaceExpand extends StatelessWidget {
                   ),
                   Container(
                     alignment: Alignment.centerRight,
-                    child: RaisedOutlineButton(
+                    child: NLRaisedOutlineButton(
                       height: 25,
                       onPressed: () {
                         Dialogs dialog = Dialogs();
@@ -519,20 +520,22 @@ class NLCardPlaceExpand extends StatelessWidget {
   }
 }
 
-class NLCardForm extends StatefulWidget {
+class NLFormCard extends StatefulWidget {
   final Place place;
 
-  const NLCardForm({Key key, this.place}) : super(key: key);
+  const NLFormCard({Key key, this.place}) : super(key: key);
 
   @override
-  _NLCardFormState createState() {
-    return new _NLCardFormState(place);
+  _NLFormCardState createState() {
+    return new _NLFormCardState(place);
   }
 }
 
-class _NLCardFormState extends State<NLCardForm> {
-  DateFormat _dateFormat;
-  DateFormat _timeFormat;
+class _NLFormCardState extends State<NLFormCard> {
+  final DateFormat _dateFormat = DateFormat('MMM dd, yyyy');
+  final DateFormat _timeFormat = DateFormat('hh:mm a');
+  final GlobalKey<FormState> _cardForm = GlobalKey<FormState>();
+
   DateTime _date;
   TimeOfDay _time;
   Place _place;
@@ -540,9 +543,7 @@ class _NLCardFormState extends State<NLCardForm> {
   TextEditingController _descriptionController;
   List<Place> _data;
 
-  _NLCardFormState(this._place) {
-    _dateFormat = DateFormat('MMM dd, yyyy');
-    _timeFormat = DateFormat('hh:mm a');
+  _NLFormCardState(this._place) {
     _date = null;
     _time = null;
     _placeController = TextEditingController();
@@ -556,95 +557,103 @@ class _NLCardFormState extends State<NLCardForm> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Card(
-        color: Colors.white,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              TypeAheadField(
-                textFieldConfiguration: TextFieldConfiguration(
-                  decoration: InputDecoration(
-                    hintText: 'Enter destination',
+      child: Form(
+        autovalidate: false,
+        key: _cardForm,
+        child: Card(
+          color: Colors.white,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                TypeAheadFormField(
+                  textFieldConfiguration: TextFieldConfiguration(
+                    decoration: InputDecoration(
+                      hintText: 'Enter destination',
+                    ),
+                    controller: _placeController,
                   ),
-                  controller: _placeController,
-                ),
-                suggestionsCallback: (pattern) async {
-                  var placeController = PlaceController();
-                  _data = await placeController.findByName(pattern);
-                  var suggestion = List<String>();
-                  for (Place p in _data) {
-                    suggestion.add(p.name);
-                  }
-                  return suggestion;
-                },
-                itemBuilder: (context, suggestion) {
-                  return ListTile(
-                    title: Text(suggestion),
-                  );
-                },
-                transitionBuilder: (context, suggestionsBox, controller) {
-                  return suggestionsBox;
-                },
-                onSuggestionSelected: (suggestion) {
-                  _placeController.text = suggestion;
-                  for (Place p in _data) {
-                    if (p.name == suggestion) {
-                      _place = p;
+                  suggestionsCallback: (pattern) async {
+                    var placeController = PlaceController();
+                    _data = await placeController.findByName(pattern);
+                    var suggestion = List<String>();
+                    for (Place p in _data) {
+                      suggestion.add(p.name);
                     }
-                  }
-                },
-              ),
-              TimePickerFormField(
-                format: _timeFormat,
-                decoration: InputDecoration(
-                  hintText: '9:00 AM',
-                ),
-                onChanged: (t) => setState(() => _time = t),
-                editable: false,
-              ),
-              DateTimePickerFormField(
-                format: _dateFormat,
-                decoration: InputDecoration(
-                  hintText: _dateFormat.format(DateTime.now()),
-                ),
-                dateOnly: true,
-                editable: false,
-                firstDate: DateTime.now(),
-                onChanged: (dt) => setState(() => _date = dt),
-              ),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  hintText: 'Description',
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                child: RaisedGradientRoundedButton(
-                  child: Text(
-                    'BOOK',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  height: 35,
-                  onPressed: () {
-                    NLDialog.showLoading(context);
-                    bookATour().then((tour) {
-                      if (tour != null) {
-                        Navigator.of(context).pop();
-                        NLDialog.showInfo(context, 'Book Successed!',
-                            'Please waiting someone register tour!');
-                      } else {
-                        NLDialog.showInfo(context, 'Book Failed!',
-                            'Sorry! Something wrong! please book again!');
-                      }
-                    });
+                    return suggestion;
                   },
+                  itemBuilder: (context, suggestion) {
+                    return ListTile(
+                      title: Text(suggestion),
+                    );
+                  },
+                  transitionBuilder: (context, suggestionsBox, controller) {
+                    return suggestionsBox;
+                  },
+                  onSuggestionSelected: (suggestion) {
+                    _placeController.text = suggestion;
+                    for (Place p in _data) {
+                      if (p.name == suggestion) {
+                        _place = p;
+                      }
+                    }
+                  },
+                  validator: Validator.notEmpty,
                 ),
-              )
-            ],
+                TimePickerFormField(
+                  format: _timeFormat,
+                  decoration: InputDecoration(
+                    hintText: '9:00 AM',
+                  ),
+                  onChanged: (t) => setState(() => _time = t),
+                  editable: false,
+                  validator: (t) =>
+                      t == null ? 'Field must not be empty' : null,
+                ),
+                DateTimePickerFormField(
+                    format: _dateFormat,
+                    decoration: InputDecoration(
+                      hintText: _dateFormat.format(DateTime.now()),
+                    ),
+                    dateOnly: true,
+                    editable: false,
+                    firstDate: DateTime.now(),
+                    onChanged: (dt) => setState(() => _date = dt),
+                    validator: (t) =>
+                        t == null ? 'Field must not be empty' : null),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    hintText: 'Description',
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: NLRaisedGradientRoundedButton(
+                    child: Text(
+                      'BOOK',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    height: 35,
+                    onPressed: () {
+                      NLDialog.showLoading(context);
+                      bookATour().then((tour) {
+                        if (tour != null) {
+                          Navigator.of(context).pop();
+                          NLDialog.showInfo(context, 'Book Successed!',
+                              'Please waiting someone register tour!');
+                        } else {
+                          NLDialog.showInfo(context, 'Book Failed!',
+                              'Sorry! Something wrong! please book again!');
+                        }
+                      });
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -653,20 +662,23 @@ class _NLCardFormState extends State<NLCardForm> {
 
   Future<Tour> bookATour() async {
     var tour = Tour();
-    DateTime startDate =
-        DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute);
-    tour.startDate = startDate;
-    tour.place = _place;
-    final prefs = await SharedPreferences.getInstance();
-    String email = prefs.getString('email');
-    var travelerController = TravellerController();
-    Traveler traveler = await travelerController.findByEmail(email);
-    tour.traveler = traveler;
-    tour.tourGuide = null;
-    tour.isAccepted = false;
+    if(_cardForm.currentState.validate()) {
+      DateTime startDate =
+      DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute);
+      tour.startDate = startDate;
+      tour.place = _place;
+      final prefs = await SharedPreferences.getInstance();
+      String email = prefs.getString('email');
+      var travelerController = TravellerController();
+      Traveler traveler = await travelerController.findByEmail(email);
+      tour.traveler = traveler;
+      tour.tourGuide = null;
+      tour.isAccepted = false;
 
-    var tourController = TourController();
-    Tour t = await tourController.createTour(tour);
-    return t;
+      var tourController = TourController();
+      Tour t = await tourController.createTour(tour);
+      return t;
+    }
+    return null;
   }
 }

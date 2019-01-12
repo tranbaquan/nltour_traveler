@@ -7,9 +7,9 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:nltour_traveler/controller/auto_complete_api.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
-import 'package:nltour_traveler/model/traveler.dart';
-import 'package:nltour_traveler/model/type.dart';
-import 'package:nltour_traveler/supporter/validator.dart';
+import 'package:nltour_traveler/model/collaborator/type.dart';
+import 'package:nltour_traveler/model/traveler/traveler.dart';
+import 'package:nltour_traveler/supporter/validator/validator.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_dialog.dart';
 import 'package:nltour_traveler/utils/dialog.dart';
@@ -82,7 +82,7 @@ class InformationPageState extends State<InformationPage> {
   Widget build(BuildContext context) {
     final _editableButton = Container(
       child: isEnable
-          ? SimpleRoundButton(
+          ? NLSimpleRoundedButton(
               textColor: Color(0xffffffff),
               btnText: 'SAVE',
               backgroundColor: Color(0xff008fe5),
@@ -99,7 +99,7 @@ class InformationPageState extends State<InformationPage> {
                 });
               },
             )
-          : SimpleRoundButton(
+          : NLSimpleRoundedButton(
               textColor: Color(0xff006fb2),
               btnText: 'EDIT',
               backgroundColor: Color(0xffffffff),
@@ -116,7 +116,7 @@ class InformationPageState extends State<InformationPage> {
 
     final _cancelButton = Container(
       margin: EdgeInsets.only(left: 5),
-      child: SimpleRoundButton(
+      child: NLSimpleRoundedButton(
         textColor: Color(0xff006fb2),
         btnText: 'CANCEL',
         backgroundColor: Color(0xffffffff),
@@ -408,7 +408,7 @@ class InformationPageState extends State<InformationPage> {
                                           MainAxisAlignment.start,
                                       children: <Widget>[
                                         InkWell(
-                                          child: RadioItemButton(
+                                          child: NLRadioItemButton(
                                             RadioModel(
                                                 account.gender == Gender.MALE
                                                     ? true
@@ -418,7 +418,7 @@ class InformationPageState extends State<InformationPage> {
                                           splashColor: Color(0xff008fe5),
                                         ),
                                         InkWell(
-                                          child: RadioItemButton(
+                                          child: NLRadioItemButton(
                                             RadioModel(
                                                 account.gender == Gender.FEMALE
                                                     ? true

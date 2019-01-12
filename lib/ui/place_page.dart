@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/controller/place_controller.dart';
-import 'package:nltour_traveler/model/place.dart';
+import 'package:nltour_traveler/model/tour/place.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 import 'package:nltour_traveler/ui/widget/nl_card.dart';
 import 'package:nltour_traveler/ui/widget/nl_menu_card.dart';
@@ -50,7 +50,7 @@ class PlacePageState extends State<PlacePage> {
     for (Place place in places) {
       final card = Container(
         margin: EdgeInsets.only(bottom: 10),
-        child: NLCardPlaceExpand(
+        child: NLPlaceBigCard(
           place: place,
         ),
       );

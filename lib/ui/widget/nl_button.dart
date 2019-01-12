@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class RaisedGradientRoundedButton extends StatelessWidget {
+class NLRaisedGradientRoundedButton extends StatelessWidget {
   final Widget child;
   final double minWidth;
   final double height;
   final Function onPressed;
 
-  const RaisedGradientRoundedButton({
+  const NLRaisedGradientRoundedButton({
     Key key,
     @required this.child,
     this.minWidth = 0,
@@ -53,13 +53,13 @@ class RaisedGradientRoundedButton extends StatelessWidget {
   }
 }
 
-class RaisedOutlineRoundedButton extends StatelessWidget {
+class NLRaisedOutlineRoundedButton extends StatelessWidget {
   final Widget child;
   final double minWidth;
   final double height;
   final Function onPressed;
 
-  const RaisedOutlineRoundedButton(
+  const NLRaisedOutlineRoundedButton(
       {Key key, this.minWidth, this.height, this.onPressed, this.child})
       : super(key: key);
 
@@ -97,14 +97,16 @@ class RaisedOutlineRoundedButton extends StatelessWidget {
   }
 }
 
-class RaisedOutlineButton extends StatelessWidget {
+class NLRaisedOutlineButton extends StatelessWidget {
   final Widget child;
   final double minWidth;
   final double height;
   final Function onPressed;
+  final Color color;
+  final Color borderColor;
 
-  const RaisedOutlineButton(
-      {Key key, this.minWidth = 0, this.height, this.onPressed, this.child})
+  const NLRaisedOutlineButton(
+      {Key key, this.minWidth = 0, this.height, this.onPressed, this.child, this.color = const Color(0xFF3eb43e), this.borderColor = Colors.white,})
       : super(key: key);
 
   @override
@@ -115,7 +117,7 @@ class RaisedOutlineButton extends StatelessWidget {
         padding: EdgeInsets.all(0.0),
         height: height,
         decoration: BoxDecoration(
-          color: Color(0xFF3eb43e),
+          color: color,
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: RaisedButton(
@@ -126,7 +128,7 @@ class RaisedOutlineButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
             side: BorderSide(
-              color: Colors.white,
+              color: borderColor,
               width: 1.0,
             ),
           ),
@@ -137,12 +139,12 @@ class RaisedOutlineButton extends StatelessWidget {
   }
 }
 
-class SimpleButton extends StatelessWidget {
+class NLSimpleButton extends StatelessWidget {
   final String btnText;
   final Color textColor;
   final Function onPress;
 
-  SimpleButton({
+  NLSimpleButton({
     this.btnText,
     this.textColor,
     this.onPress,
@@ -167,8 +169,7 @@ class SimpleButton extends StatelessWidget {
   }
 }
 
-// simple round button
-class SimpleRoundButton extends StatelessWidget {
+class NLSimpleRoundedButton extends StatelessWidget {
   final Color backgroundColor;
   final Color roundColor;
   final String btnText;
@@ -177,7 +178,7 @@ class SimpleRoundButton extends StatelessWidget {
   final double btnWidth;
   final Function onPressed;
 
-  SimpleRoundButton({
+  NLSimpleRoundedButton({
     this.backgroundColor,
     this.roundColor,
     this.btnText,
@@ -226,10 +227,10 @@ class SimpleRoundButton extends StatelessWidget {
   }
 }
 
-class RadioItemButton extends StatelessWidget {
+class NLRadioItemButton extends StatelessWidget {
   final RadioModel _item;
 
-  RadioItemButton(this._item);
+  NLRadioItemButton(this._item);
 
   @override
   Widget build(BuildContext context) {
