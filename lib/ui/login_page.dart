@@ -69,7 +69,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
-            child: Image.asset('assets/images/travel.jpg',
+            child: Image.asset(
+              'assets/images/travel.jpg',
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.cover,
               height: 240,
@@ -77,8 +78,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
           ClipRRect(
             borderRadius: BorderRadius.circular(60),
-            child: Image.network(
-              'https://firebasestorage.googleapis.com/v0/b/nltour-2018.appspot.com/o/NLTravel.png?alt=media&token=a3a77bc0-3ebe-4f19-9dde-16a2bdf77a03',
+            child: Image.asset(
+              'assets/images/NLTravel.png',
               width: 120,
               height: 120,
               fit: BoxFit.cover,
@@ -202,6 +203,7 @@ class _LoginPageState extends State<LoginPage> {
   void _saveUser(Traveler data) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('logged', true);
+    prefs.setString('email', data.email);
     await DatabaseProvider.db.deleteAll();
     await DatabaseProvider.db.addTraveler(data);
   }

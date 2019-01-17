@@ -1,23 +1,23 @@
 import 'dart:io';
 
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nltour_traveler/controller/auto_complete_api.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
+import 'package:nltour_traveler/model/collaborator/type.dart';
 import 'package:nltour_traveler/model/common/address.dart';
 import 'package:nltour_traveler/model/common/languages.dart';
 import 'package:nltour_traveler/model/traveler/traveler.dart';
-import 'package:nltour_traveler/model/collaborator/type.dart';
+import 'package:nltour_traveler/supporter/database/database.dart';
 import 'package:nltour_traveler/supporter/validator/validator.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
-import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/ui/widget/nl_form_field.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:nltour_traveler/utils/dialog.dart';
 import 'package:path/path.dart' as path;
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -33,7 +33,7 @@ class RegisterPageState extends State<RegisterPage> {
   Gender _currentGender;
   DateTime _date;
   File _image;
-  Traveler traveler;
+  Traveler traveler = Traveler();
 
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -59,16 +59,16 @@ class RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: NLAppbar.buildAppbar(context, 'Create An Account'),
       body: buildRegisterForm(context),
     );
   }
 
-  List<Step> _step() {
+  List<Step> _step(BuildContext context) {
     List<Step> step = [
       Step(
-        title: Text('Email'),
+        title: Text(''),
         content: Form(
           autovalidate: true,
           key: _emailForm,
@@ -84,30 +84,36 @@ class RegisterPageState extends State<RegisterPage> {
         state: StepState.indexed,
       ),
       Step(
-          title: Text('Password'),
+          title: Text(''),
           content: Form(
             autovalidate: true,
             key: _passwordForm,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                TextInputFormField(
-                  controller: _password,
-                  validator: Validator.validatePassword,
-                  textAlign: TextAlign.left,
-                  obscureText: true,
-                  hintText: "Enter your password",
+                Container(
+                  height: 60,
+                  child: TextInputFormField(
+                    controller: _password,
+                    validator: Validator.validatePassword,
+                    textAlign: TextAlign.left,
+                    obscureText: true,
+                    hintText: "Enter your password",
+                  ),
                 ),
-                TextInputFormField(
-                  controller: _reenterPassword,
-                  validator: (value) {
-                    if (value != _password.text) {
-                      return "Password is not match!";
-                    }
-                  },
-                  textAlign: TextAlign.left,
-                  obscureText: true,
-                  hintText: "Re-enter your password",
+                Container(
+                  height: 60,
+                  child: TextInputFormField(
+                    controller: _reenterPassword,
+                    validator: (value) {
+                      if (value != _password.text) {
+                        return "Password is not match!";
+                      }
+                    },
+                    textAlign: TextAlign.left,
+                    obscureText: true,
+                    hintText: "Re-enter your password",
+                  ),
                 ),
               ],
             ),
@@ -115,7 +121,7 @@ class RegisterPageState extends State<RegisterPage> {
           isActive: _currentStep >= 1,
           state: StepState.indexed),
       Step(
-          title: Text('Personal Information'),
+          title: Text(''),
           content: Form(
             autovalidate: true,
             key: _infoForm,
@@ -127,6 +133,7 @@ class RegisterPageState extends State<RegisterPage> {
                   children: <Widget>[
                     Container(
                       width: 100,
+                      height: 60,
                       margin: EdgeInsets.only(right: 16),
                       child: TextInputFormField(
                         hintText: 'First Name',
@@ -137,28 +144,37 @@ class RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     Expanded(
-                      child: TextInputFormField(
-                        hintText: 'Last Name',
-                        validator: Validator.notEmpty,
-                        controller: _lastName,
-                        textAlign: TextAlign.left,
-                        textCapitalization: TextCapitalization.words,
+                      child: Container(
+                        height: 60,
+                        child: TextInputFormField(
+                          hintText: 'Last Name',
+                          validator: Validator.notEmpty,
+                          controller: _lastName,
+                          textAlign: TextAlign.left,
+                          textCapitalization: TextCapitalization.words,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                TextInputFormField(
-                  hintText: 'Personal Id',
-                  validator: Validator.notEmpty,
-                  controller: _personalId,
-                  textAlign: TextAlign.left,
+                Container(
+                  height: 60,
+                  child: TextInputFormField(
+                    hintText: 'Personal Id',
+                    validator: Validator.notEmpty,
+                    controller: _personalId,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-                TextInputFormField(
-                  hintText: 'Phone number',
-                  validator: Validator.notEmpty,
-                  controller: _phoneNumber,
-                  textAlign: TextAlign.left,
-                  keyboardType: TextInputType.number,
+                Container(
+                  height: 60,
+                  child: TextInputFormField(
+                    hintText: 'Phone number',
+                    validator: Validator.notEmpty,
+                    controller: _phoneNumber,
+                    textAlign: TextAlign.left,
+                    keyboardType: TextInputType.number,
+                  ),
                 ),
                 Row(
                   children: <Widget>[
@@ -190,62 +206,73 @@ class RegisterPageState extends State<RegisterPage> {
                     ),
                   ],
                 ),
-                DateTimePickerFormField(
-                  format: dateFormat,
-                  decoration: InputDecoration(
-                    hintText: "Birthday",
+                Container(
+                  height: 60,
+                  child: DateTimePickerFormField(
+                    format: dateFormat,
+                    decoration: InputDecoration(
+                      hintText: "Birthday",
+                    ),
+                    dateOnly: true,
+                    editable: false,
+                    onChanged: (date) => setState(() => _date = date),
+                    validator: (date) {
+                      return date == null ? 'Please enter your birthday' : null;
+                    },
                   ),
-                  dateOnly: true,
-                  editable: false,
-                  onChanged: (date) => setState(() => _date = date),
-                  validator: (date) {
-                    return date == null ? 'Please enter your birthday' : null;
-                  },
                 ),
-                TypeAheadFormField(
-                  textFieldConfiguration: TextFieldConfiguration(
-                    decoration: InputDecoration(hintText: 'Enter your country'),
-                    controller: _country,
+                Container(
+                  height: 60,
+                  child: TypeAheadFormField(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      decoration:
+                          InputDecoration(hintText: 'Enter your country'),
+                      controller: _country,
+                    ),
+                    suggestionsCallback: (pattern) async {
+                      return await autoComplete.getCountries(pattern);
+                    },
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text(suggestion),
+                      );
+                    },
+                    transitionBuilder: (context, suggestionsBox, controller) {
+                      return suggestionsBox;
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      _country.text = suggestion;
+                    },
+                    validator: Validator.notEmpty,
                   ),
-                  suggestionsCallback: (pattern) async {
-                    return await autoComplete.getCountries(pattern);
-                  },
-                  itemBuilder: (context, suggestion) {
-                    return ListTile(
-                      title: Text(suggestion),
-                    );
-                  },
-                  transitionBuilder: (context, suggestionsBox, controller) {
-                    return suggestionsBox;
-                  },
-                  onSuggestionSelected: (suggestion) {
-                    _country.text = suggestion;
-                  },
-                  validator: Validator.notEmpty,
                 ),
-                TypeAheadFormField(
-                  textFieldConfiguration: TextFieldConfiguration(
-                    decoration: InputDecoration(hintText: 'Enter your languages'),
-                    controller: _languages,
+                Container(
+                  height: 60,
+                  child: TypeAheadFormField(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      decoration:
+                          InputDecoration(hintText: 'Enter your languages'),
+                      controller: _languages,
+                    ),
+                    suggestionsCallback: (pattern) async {
+                      return await autoComplete.getCountries(pattern);
+                    },
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text(suggestion),
+                      );
+                    },
+                    noItemsFoundBuilder: (context) {
+                      return Text('No suggestions found!');
+                    },
+                    transitionBuilder: (context, suggestionsBox, controller) {
+                      return suggestionsBox;
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      _languages.text = suggestion;
+                    },
+                    validator: Validator.notEmpty,
                   ),
-                  suggestionsCallback: (pattern) async {
-                    return await autoComplete.getCountries(pattern);
-                  },
-                  itemBuilder: (context, suggestion) {
-                    return ListTile(
-                      title: Text(suggestion),
-                    );
-                  },
-                  noItemsFoundBuilder: (context) {
-                    return Text('No suggestions found!');
-                  },
-                  transitionBuilder: (context, suggestionsBox, controller) {
-                    return suggestionsBox;
-                  },
-                  onSuggestionSelected: (suggestion) {
-                    _languages.text = suggestion;
-                  },
-                  validator: Validator.notEmpty,
                 ),
               ],
             ),
@@ -253,28 +280,31 @@ class RegisterPageState extends State<RegisterPage> {
           isActive: _currentStep >= 2,
           state: StepState.indexed),
       Step(
-          title: Text('Avatar'),
+          title: Text(''),
           content: Center(
             child: _image == null
                 ? Container(
-                    alignment: Alignment.topLeft,
-                    child: NLRaisedOutlineButton(
-                      height: 40,
-                      minWidth: 0,
-                      onPressed: () {
-                        getImage();
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(
+                        color: Color(0xFF008fe5),
+                        width: 4,
+                      ),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        getImage(context);
                       },
-                      color: Colors.white,
-                      child: Text(
-                        'Add Photo',
-                        style: TextStyle(
-                          color: Color(0xFF008fe5),
-                        ),
+                      child: Icon(
+                        Icons.insert_photo,
+                        size: 50,
+                        color: Color(0xFF008fe5),
                       ),
                     ),
                   )
                 : Container(
-                    alignment: Alignment.topLeft,
                     child: Stack(
                       alignment: AlignmentDirectional(1.5, -1.5),
                       children: <Widget>[
@@ -292,7 +322,7 @@ class RegisterPageState extends State<RegisterPage> {
                           },
                           icon: Icon(
                             Icons.clear,
-                            color: Colors.white,
+                            color: Colors.grey,
                           ),
                         )
                       ],
@@ -300,15 +330,44 @@ class RegisterPageState extends State<RegisterPage> {
                   ),
           ),
           isActive: _currentStep >= 3,
-          state: StepState.complete),
+          state: StepState.indexed),
     ];
     return step;
   }
 
-
   Widget buildRegisterForm(BuildContext context) {
     var stepper = Stepper(
-      steps: _step(),
+      type: StepperType.horizontal,
+      steps: _step(context),
+      controlsBuilder: (BuildContext context,
+          {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+        return ConstrainedBox(
+          constraints: const BoxConstraints.tightFor(height: 48.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              FlatButton(
+                onPressed: onStepCancel,
+                textColor: Color(0xFF008fe5),
+                textTheme: ButtonTextTheme.normal,
+                child: new Row(children: <Widget>[
+                  const Icon(Icons.chevron_left),
+                  const Text('BACK')
+                ]),
+              ),
+              FlatButton(
+                onPressed: onStepContinue,
+                textColor: Color(0xFF008fe5),
+                textTheme: ButtonTextTheme.normal,
+                child: new Row(children: const <Widget>[
+                  const Text('NEXT'),
+                  const Icon(Icons.chevron_right)
+                ]),
+              )
+            ],
+          ),
+        );
+      },
       currentStep: this._currentStep,
       onStepContinue: () {
         return _continue();
@@ -332,10 +391,9 @@ class RegisterPageState extends State<RegisterPage> {
 
   void _continue() async {
     var controller = TravellerController();
-    print(_currentStep);
     switch (_currentStep) {
       case 0:
-        if (Validator.validateEmail(_email.text) != null) {
+        if (!_emailForm.currentState.validate()) {
           return null;
         } else {
           NLDialog.showLoading(context);
@@ -364,17 +422,7 @@ class RegisterPageState extends State<RegisterPage> {
         break;
       case 2:
         NLDialog.showLoading(context);
-        if (_firstName.text == null ||
-            _firstName.text.isEmpty ||
-            _lastName.text == null ||
-            _lastName.text.isEmpty ||
-            _personalId.text == null ||
-            _personalId.text.isEmpty ||
-            _date == null ||
-            _country.text == null ||
-            _country.text.isEmpty ||
-            _languages.text == null ||
-            _languages.text.isEmpty) {
+        if (!_infoForm.currentState.validate()) {
           return null;
         } else {
           setState(() {
@@ -382,6 +430,7 @@ class RegisterPageState extends State<RegisterPage> {
             traveler.lastName = _lastName.text;
             traveler.personalID = _personalId.text;
             traveler.dob = _date;
+            traveler.phoneNumber = _phoneNumber.text;
             traveler.address = Address(address: "", country: _country.text);
             traveler.languages = Languages(primaryLanguage: _languages.text);
             traveler.gender = _currentGender;
@@ -392,7 +441,8 @@ class RegisterPageState extends State<RegisterPage> {
         break;
       case 3:
         if (_image == null) {
-          return null;
+          traveler.avatar = 'assets/images/NLTravel.png';
+          createUser();
         } else {
           NLDialog.showLoading(context);
           final StorageReference storage = FirebaseStorage.instance
@@ -414,24 +464,49 @@ class RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  Future getImage(BuildContext context) async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.photo_library),
+              title: Text('Gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(1);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.camera_alt),
+              title: Text('Camera'),
+              onTap: () {
+                Navigator.pop(context);
+                pickImage(2);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
+  Future pickImage(int type) async {
+    var image = await ImagePicker.pickImage(
+        source: type == 1 ? ImageSource.gallery : ImageSource.camera);
     setState(() {
       _image = image;
     });
   }
 
   Future createUser() async {
-    var controller =TravellerController();
+    var controller = TravellerController();
     final prefs = await SharedPreferences.getInstance();
     controller.create(traveler).then((data) {
       prefs.setBool('logged', true);
       prefs.setString('email', data.email);
-      prefs.setString('avatar', data.avatar);
-      prefs.setString('firstName', data.firstName);
-      prefs.setString('lastName', data.lastName);
+      DatabaseProvider.db.addTraveler(data);
       Navigator.of(context).pushReplacementNamed('/');
     });
   }

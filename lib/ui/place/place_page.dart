@@ -12,15 +12,12 @@ class PlacePage extends StatefulWidget {
   }
 }
 
-class PlacePageState extends State<PlacePage> {
+class PlacePageState extends State<PlacePage> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: NLAppbar.buildAppbar(context, 'Place'),
-      drawer: Drawer(
-        child: NLMenuCard(),
-      ),
       body: FutureBuilder(
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -28,6 +25,7 @@ class PlacePageState extends State<PlacePage> {
               padding: EdgeInsets.all(16),
               child: ListView(
                 children: snapshot.data,
+                addAutomaticKeepAlives: true,
               ),
             );
           } else {
@@ -59,6 +57,9 @@ class PlacePageState extends State<PlacePage> {
 
     return res;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
 
 }

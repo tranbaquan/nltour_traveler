@@ -12,7 +12,7 @@ class TextInputFormField extends StatelessWidget {
 
   const TextInputFormField(
       {Key key,
-      this.hintText,
+      this.hintText = "",
       this.obscureText = false,
       this.fontSize = 14,
       this.textAlign = TextAlign.center,

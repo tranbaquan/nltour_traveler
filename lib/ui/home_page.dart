@@ -13,33 +13,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new _HomePageState(title: 'NLTour');
+    return new _HomePageState();
   }
 }
 
-class _HomePageState extends State<HomePage> {
-  final String title;
-
-  _HomePageState({this.title});
-
-
-  Future<List<Widget>> getPlaceTour() async {
-    var res = List<Widget>();
-    var placeController = PlaceController();
-    List<Place> places = await placeController.getAll();
-    for (Place place in places) {
-      final card = NLPlaceCard(
-        place: place,
-        height: 200,
-        width: 150,
-      );
-      res.add(card);
-    }
-    return res;
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: NLAppbar.buildAppbar(context, 'NLTour'),
+      drawer: NLMenuCard(),
+      body: buildContent(context),
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  bool get wantKeepAlive => true;
+
+  Widget buildContent(BuildContext context) {
     final widget1 = Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
       child: Column(
@@ -71,8 +63,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     "see more >>",
                     style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.normal,
+                      color: Colors.grey[700],
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -93,6 +84,7 @@ class _HomePageState extends State<HomePage> {
             return ListView(
               scrollDirection: Axis.horizontal,
               children: snapshot.data,
+              addAutomaticKeepAlives: true,
             );
           }
           return Center(child: CircularProgressIndicator());
@@ -132,20 +124,14 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: NLFormCard(),
     );
-    return Scaffold(
-      appBar: NLAppbar.buildAppbar(context, 'NLTour'),
-      drawer: Drawer(
-        child: NLMenuCard(),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            widget1,
-            widget2,
-            widget3,
-            widget4,
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          widget1,
+          widget2,
+          widget3,
+          widget4,
+        ],
       ),
     );
   }
@@ -169,4 +155,18 @@ class _HomePageState extends State<HomePage> {
     return t;
   }
 
+  Future<List<Widget>> getPlaceTour() async {
+    var res = List<Widget>();
+    var placeController = PlaceController();
+    List<Place> places = await placeController.getAll();
+    for (Place place in places) {
+      final card = NLPlaceCard(
+        place: place,
+        height: 200,
+        width: 150,
+      );
+      res.add(card);
+    }
+    return res;
+  }
 }

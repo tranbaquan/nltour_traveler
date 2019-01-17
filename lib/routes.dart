@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:nltour_traveler/ui/change_pass_page.dart';
 import 'package:nltour_traveler/ui/forgot_page.dart';
-import 'package:nltour_traveler/ui/history_page.dart';
+import 'package:nltour_traveler/ui/user/history_page.dart';
 import 'package:nltour_traveler/ui/home_page.dart';
-import 'package:nltour_traveler/ui/info_page.dart';
+import 'package:nltour_traveler/ui/user/info_page.dart';
 import 'package:nltour_traveler/ui/login_page.dart';
-import 'package:nltour_traveler/ui/mesage_page.dart';
-import 'package:nltour_traveler/ui/message_list_page.dart';
+import 'package:nltour_traveler/ui/user/mesage_page.dart';
+import 'package:nltour_traveler/ui/user/message_list_page.dart';
 import 'package:nltour_traveler/ui/payment_page.dart';
-import 'package:nltour_traveler/ui/place_page.dart';
+import 'package:nltour_traveler/ui/place/place_page.dart';
 import 'package:nltour_traveler/ui/register_page.dart';
 
 final routes = {

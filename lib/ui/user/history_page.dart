@@ -18,9 +18,6 @@ class HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: NLAppbar.buildAppbar(context, 'History'),
-      drawer: Drawer(
-        child: NLMenuCard(),
-      ),
       body: buildBody(context),
     );
   }

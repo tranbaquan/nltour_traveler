@@ -34,7 +34,7 @@ class DatabaseProvider {
           "dob TEXT,"
           "country TEXT,"
           "main_language TEXT,"
-          "passport TEXT,"
+          "passport TEXT"
           ")");
     });
   }
@@ -53,9 +53,10 @@ class DatabaseProvider {
     return res;
   }
 
-  getTraveler(String email) async {
+  Future<Traveler> getTraveler(String email) async {
     final db = await database;
     var res = await db.query("Traveler", where: "email = ?", whereArgs: [email]);
+    print(res);
     return res.isNotEmpty ? Traveler.fromDBMap(res.first) : null;
   }
 
@@ -66,7 +67,7 @@ class DatabaseProvider {
 
   deleteAll() async {
     final db = await database;
-    return db.rawDelete("Delete * from Traveler");
+    return db.rawDelete("DELETE from Traveler");
   }
 
 }

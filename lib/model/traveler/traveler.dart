@@ -19,6 +19,7 @@ class Traveler {
   String password;
   DateTime activeDate;
   String passport;
+  String phoneNumber;
 
   Traveler(
       {this.firstName,
@@ -32,7 +33,8 @@ class Traveler {
       this.languages,
       this.password,
       this.activeDate,
-      this.passport});
+      this.passport,
+      this.phoneNumber,});
 
   factory Traveler.fromJson(Map<String, dynamic> json) =>
       _$TravelerFromJson(json);
@@ -47,7 +49,7 @@ class Traveler {
       "email": email,
       "gender": "${gender.index}",
       "avatar": avatar,
-      "phone_number": "",
+      "phone_number": phoneNumber,
       "dob": dob.toIso8601String(),
       "country": address.country,
       "main_language": languages.primaryLanguage,
@@ -61,19 +63,21 @@ class Traveler {
         lastName: map['last_name'] as String,
         personalID: map['personal_id'] as String,
         email: map['email'] as String,
-        gender: getGender(map['gender'] as String),
+        gender: getGender(map['gender'] as int),
         avatar: map['avatar'],
         dob: map['dob'] == null ? null : DateTime.parse(map['dob'] as String),
         address: Address(country: map['country'] as String),
         languages: Languages(primaryLanguage: map['main_language'] as String),
+        phoneNumber: map['phone_number'] as String,
         passport: map['passport'] as String);
+
   }
 
-  static Gender getGender(String genderIndex) {
+  static Gender getGender(int genderIndex) {
     switch (genderIndex) {
-      case "0":
+      case 0:
         return Gender.MALE;
-      case "1":
+      case 1:
         return Gender.FEMALE;
       default:
         return Gender.MALE;

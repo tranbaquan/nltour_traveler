@@ -1,7 +1,8 @@
 import 'package:nltour_traveler/network/host.dart';
 
 class CollaboratorUrl {
-  static final String collaborator = Hosting.host + "collaborator";
-  static final String login = collaborator + "/login";
-  static final String info = collaborator + "/info";
+  static final String crud = Hosting.host + "collaborator";
+  static final String login = Hosting.host + "collaborator/login";
+  static final String otp = Hosting.host + "collaborator/otp";
+  static final String password = Hosting.host + "collaborator/password";
 }

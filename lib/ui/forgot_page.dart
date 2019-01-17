@@ -1,5 +1,6 @@
 import 'package:device_id/device_id.dart';
 import 'package:flutter/material.dart';
+import 'package:nltour_traveler/controller/otp_controller.dart';
 import 'package:nltour_traveler/controller/traveler_controller.dart';
 import 'package:nltour_traveler/model/common/otp.dart';
 import 'package:nltour_traveler/supporter/validator/validator.dart';
@@ -49,17 +50,23 @@ class ForgotPageState extends State<ForgotPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  TextInputFormField(
-                    validator: Validator.validateEmail,
-                    textAlign: TextAlign.left,
-                    controller: _email,
-                    hintText: "Enter your email",
-                    keyboardType: TextInputType.emailAddress,
+                  Container(
+                    height: 60,
+                    child: TextInputFormField(
+                      validator: Validator.validateEmail,
+                      textAlign: TextAlign.left,
+                      controller: _email,
+                      hintText: "Enter your email",
+                      keyboardType: TextInputType.emailAddress,
+                    ),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 16),
                     child: NLRaisedGradientRoundedButton(
-                      child: Text("Send"),
+                      child: Text("SEND", style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16
+                      ),),
                       height: 40,
                       minWidth: 250,
                       onPressed: () {
@@ -91,7 +98,7 @@ class ForgotPageState extends State<ForgotPage> {
                     margin: EdgeInsets.only(top: 16),
                     child: NLRaisedGradientRoundedButton(
                       child: Text(
-                        "Verify",
+                        "VERIFY",
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -108,9 +115,10 @@ class ForgotPageState extends State<ForgotPage> {
                     margin: EdgeInsets.only(top: 16),
                     child: NLRaisedGradientRoundedButton(
                       child: Text(
-                        "Resend",
+                        "RESEND",
                         style: TextStyle(
                           color: Colors.white,
+                          fontSize: 16
                         ),
                       ),
                       height: 40,
@@ -131,7 +139,7 @@ class ForgotPageState extends State<ForgotPage> {
 
 
   void _validateOTP() async {
-    var controller = TravellerController();
+    var controller = OTPController();
     _otp.identifier = await DeviceId.getID;
     final prefs = await SharedPreferences.getInstance();
     controller.validateOTP(_otp).then((b) {
@@ -146,13 +154,14 @@ class ForgotPageState extends State<ForgotPage> {
   }
 
   void _getOTP() {
-    var controller = TravellerController();
-    controller.findByEmail(_email.text).then((data) {
+    var travelerController = TravellerController();
+    var otpController = OTPController();
+    travelerController.findByEmail(_email.text).then((data) {
       if (data == null) {
         Navigator.of(context).pop();
         NLDialog.showInfo(context, "Get OTP Failed!", "Email is incorrect!");
       } else {
-        controller.getOTP(_email.text, "Get OTP").then((otp) {
+        otpController.getOTP(_email.text, "Get OTP").then((otp) {
           Navigator.of(context).pop();
           _otp = otp;
           setState(() {

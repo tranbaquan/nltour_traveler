@@ -27,9 +27,9 @@ class MessageListPageState extends State<MessageListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: NLAppbar.buildAppbar(context, 'Message'),
-      drawer: Drawer(
-        child: NLMenuCard(),
-      ),
+//      drawer: Drawer(
+//        child: NLMenuCard(),
+//      ),
       body: buildBody(context),
     );
   }

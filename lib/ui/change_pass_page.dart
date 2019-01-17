@@ -86,7 +86,7 @@ class ChangePassPageState extends State<ChangePassPage> {
     var deviceInfo = await DeviceId.getID;
     final prefs = await SharedPreferences.getInstance();
     String email = prefs.get('email');
-    controller.changePassword(email, _pass.text, deviceInfo).then((data) {
+    controller.changePasswordByOtp(email, _pass.text, deviceInfo).then((data) {
       if (data == null) {
         Navigator.of(context).pop();
         NLDialog.showInfo(context, "Change Password Failed", "Please check your network");
