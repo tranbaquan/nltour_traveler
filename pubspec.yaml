@@ -34,6 +34,7 @@ dependencies:
   cloud_firestore: ^0.8.2+3
   sqflite: ^1.0.0
   path_provider: ^0.4.1
+  flutter_paystack: ^0.9.3
 
 dev_dependencies:
   flutter_test:
