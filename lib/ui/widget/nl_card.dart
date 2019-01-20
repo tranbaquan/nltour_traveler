@@ -14,7 +14,6 @@ import 'package:nltour_traveler/model/traveler/traveler.dart';
 import 'package:nltour_traveler/supporter/validator/validator.dart';
 import 'package:nltour_traveler/ui/place/place_detail_page.dart';
 import 'package:nltour_traveler/ui/user/history_detail_page.dart';
-import 'package:nltour_traveler/ui/user/mesage_page.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/utils/dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -210,50 +209,6 @@ class NLHistoryCard extends StatelessWidget {
                         fontFamily: 'Semilight',
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        tour.tourGuide != null
-                            ? NLRaisedOutlineButton(
-                                height: 25,
-                                onPressed: () {
-                                  goToMessage(context, tour.tourGuide);
-                                },
-                                child: Text(
-                                  'Contact',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              )
-                            : NLRaisedOutlineButton(
-                                height: 25,
-                                onPressed: () {},
-                                child: Text(
-                                  'Pay for tour',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                        tour.tourGuide == null
-                            ? NLSimpleRoundedButton(
-                                btnHeight: 25,
-                                btnWidth: 80,
-                                btnText: 'Cancel',
-                                textColor: Color(0xFF3eb43e),
-                                roundColor: Color(0xFF3eb43e),
-                                backgroundColor: Colors.white,
-                                onPressed: () {
-                                  cancelTour(context);
-                                },
-                              )
-                            : Container(),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -316,44 +271,14 @@ class NLHistoryCard extends StatelessWidget {
               style: TextStyle(fontSize: 12),
             ),
             Text(
-              "Type: " + getTourGiudeType(c.type),
+              "Type: " + getTourGuideType(c.type),
               style: TextStyle(fontSize: 12),
             ),
             Text(
               "Languages: " + c.languages.primaryLanguage,
               style: TextStyle(fontSize: 12),
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                NLSimpleRoundedButton(
-                  onPressed: () {
-                    goToMessage(context, c);
-                  },
-                  btnText: 'Message',
-                  btnHeight: 30,
-                  btnWidth: 80,
-                  backgroundColor: Color(0xFF3eb43e),
-                  roundColor: Color(0xFF3eb43e),
-                  textColor: Colors.white,
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 5),
-                  child: NLSimpleRoundedButton(
-                    onPressed: () {
-                      acceptGuide(c.email);
-                    },
-                    btnText: 'Get',
-                    btnHeight: 30,
-                    btnWidth: 80,
-                    backgroundColor: Color(0xFF008fe5),
-                    roundColor: Color(0xFF008fe5),
-                    textColor: Colors.white,
-                  ),
-                ),
-              ],
-            ),
+
           ],
         ),
       );
@@ -367,7 +292,7 @@ class NLHistoryCard extends StatelessWidget {
     return res;
   }
 
-  String getTourGiudeType(TourGuideType type) {
+  String getTourGuideType(TourGuideType type) {
     if (type == TourGuideType.FREELANCER) return 'Freelacer';
     if (type == TourGuideType.PROFESSOR) return 'Professor';
     if (type == TourGuideType.RESIDENT) return 'Resident';
@@ -375,30 +300,6 @@ class NLHistoryCard extends StatelessWidget {
     return '';
   }
 
-  Future goToMessage(BuildContext context, Collaborator collborator) async {
-    final prefs = await SharedPreferences.getInstance();
-    String myEmail = prefs.getString('email');
-    TravellerController controller = TravellerController();
-    controller.findByEmail(myEmail).then((data) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MessagePage(
-                  traveler: data,
-                  collaborator: collborator,
-                )),
-      );
-    });
-  }
-
-  void acceptGuide(String email) {}
-
-  cancelTour(BuildContext context) async {
-    NLDialog.showLoading(context);
-    TourController controller = TourController();
-    await controller.cancelTour(tour.id);
-    Navigator.of(context).pop();
-  }
 }
 
 class NLPlaceBigCard extends StatelessWidget {
@@ -501,33 +402,6 @@ class NLPlaceBigCard extends StatelessWidget {
       ),
     );
     return widget;
-  }
-
-  Widget _showDetail(Place place) {
-    return Column(
-      children: <Widget>[
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                place.description,
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'Semilight',
-                ),
-              ),
-              Image.network(
-                place.imageUrl,
-                fit: BoxFit.cover,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 }
 

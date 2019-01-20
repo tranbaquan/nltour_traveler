@@ -3,7 +3,7 @@ import 'package:nltour_traveler/model/collaborator/type.dart';
 import 'package:nltour_traveler/model/common/address.dart';
 import 'package:nltour_traveler/model/common/languages.dart';
 
-part 'package:nltour_traveler/model/collaborator/collaborator.g.dart';
+part 'collaborator.g.dart';
 
 @JsonSerializable()
 class Collaborator {

@@ -722,7 +722,6 @@ class InformationPageState extends State<InformationPage> {
 
   Future<Traveler> updateUser() async {
     var controller = TravellerController();
-    final prefs = await SharedPreferences.getInstance();
     account.languages.primaryLanguage = _languages.text.isEmpty
         ? account.languages.primaryLanguage
         : _languages.text;

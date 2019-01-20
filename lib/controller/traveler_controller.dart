@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:nltour_traveler/controller/public_api.dart';
+import 'package:nltour_traveler/controller/common.dart';
 import 'package:nltour_traveler/model/traveler/traveler.dart';
 import 'package:nltour_traveler/network/traveler_url.dart';
 

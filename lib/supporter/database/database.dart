@@ -56,7 +56,6 @@ class DatabaseProvider {
   Future<Traveler> getTraveler(String email) async {
     final db = await database;
     var res = await db.query("Traveler", where: "email = ?", whereArgs: [email]);
-    print(res);
     return res.isNotEmpty ? Traveler.fromDBMap(res.first) : null;
   }
 

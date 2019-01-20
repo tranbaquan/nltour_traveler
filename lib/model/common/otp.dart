@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'package:nltour_traveler/model/common/otp.g.dart';
+part 'otp.g.dart';
 
 @JsonSerializable()
 class OTP {

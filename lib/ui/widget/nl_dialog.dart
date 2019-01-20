@@ -11,7 +11,7 @@ class Dialogs {
     }
   }
 
-  confirm(BuildContext context, Place place, Widget widget) {
+  confirm1(BuildContext context, Place place, Widget widget) {
     return showDialog(
       context: context,
       barrierDismissible: true,

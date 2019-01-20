@@ -270,30 +270,36 @@ List<Option> choices = <Option>[
   Option(
     title: 'Information',
     onTap: (BuildContext context) {
+      Navigator.pop(context);
       Navigator.pushNamed(context, '/info');
     },
   ),
   Option(
     title: 'Payment',
     onTap: (BuildContext context) {
+      Navigator.pop(context);
       Navigator.pushNamed(context, '/payment');
     },
   ),
   Option(
     title: 'History',
     onTap: (BuildContext context) {
+      Navigator.pop(context);
       Navigator.pushNamed(context, '/history');
     },
   ),
   Option(
     title: 'My messages',
     onTap: (BuildContext context) {
+      Navigator.pop(context);
       Navigator.pushNamed(context, '/message_list');
     },
   ),
   Option(
     title: 'Privacy Policy',
-    onTap: (BuildContext context) {},
+    onTap: (BuildContext context) {
+      Navigator.pop(context);
+    },
   ),
   Option(
     title: 'Sign Out',

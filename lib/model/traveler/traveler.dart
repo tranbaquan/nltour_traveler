@@ -3,7 +3,7 @@ import 'package:nltour_traveler/model/common/languages.dart';
 import 'package:nltour_traveler/model/collaborator/type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'package:nltour_traveler/model/traveler/traveler.g.dart';
+part 'traveler.g.dart';
 
 @JsonSerializable()
 class Traveler {

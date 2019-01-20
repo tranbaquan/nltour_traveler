@@ -55,7 +55,8 @@ class HistoryPageState extends State<HistoryPage> {
           ));
       res.add(card);
     }
-
     return res;
   }
+
+
 }

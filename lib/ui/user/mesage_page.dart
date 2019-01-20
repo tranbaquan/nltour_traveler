@@ -19,18 +19,31 @@ class MessagePage extends StatefulWidget {
 }
 
 class MessagePageState extends State<MessagePage> {
-  CollectionReference messageReference;
-  CollectionReference messageReference1;
+  CollectionReference messageTravelersReference;
+  CollectionReference messageCollaboratorsReference;
+
+  CollectionReference travellerConversationsReference;
+  CollectionReference collaboratorConversationsReference;
   final _message = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    messageReference = Firestore.instance.collection('message/' +
-        widget.traveler.personalID +
-        '/' +
-        widget.collaborator.personalID);
+//    messageReference = Firestore.instance.collection('message/' +
+//        widget.traveler.personalID +
+//        '/' +
+//        widget.collaborator.personalID);
 
+    travellerConversationsReference = Firestore.instance.collection(
+        'messages/' + widget.traveler.personalID + '/conversations');
+    collaboratorConversationsReference = Firestore.instance.collection(
+        'messages/' + widget.collaborator.personalID + '/conversations');
+    messageTravelersReference = travellerConversationsReference
+        .document(widget.collaborator.personalID)
+        .collection('contents');
+    messageCollaboratorsReference = collaboratorConversationsReference
+        .document(widget.traveler.personalID)
+        .collection('contents');
   }
 
   @override
@@ -50,7 +63,7 @@ class MessagePageState extends State<MessagePage> {
             children: <Widget>[
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: messageReference.snapshots(),
+                  stream: messageTravelersReference.snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError)
@@ -210,8 +223,12 @@ class MessagePageState extends State<MessagePage> {
   }
 
   void sendMessage() {
-    messageReference
+    messageTravelersReference
         .add({'email': widget.traveler.email, 'content': _message.text});
+    messageCollaboratorsReference
+        .add({'email': widget.traveler.email, 'content': _message.text});
+    travellerConversationsReference.document(widget.collaborator.personalID).setData({'email' : widget.collaborator.email});
+    collaboratorConversationsReference.document(widget.traveler.personalID).setData({'email' : widget.traveler.email});
     setState(() {
       _message.clear();
     });

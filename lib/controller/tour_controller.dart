@@ -1,4 +1,4 @@
-import 'package:nltour_traveler/controller/public_api.dart';
+import 'package:nltour_traveler/controller/common.dart';
 import 'package:nltour_traveler/model/collaborator/collaborator.dart';
 import 'package:nltour_traveler/model/tour/tour.dart';
 import 'package:http/http.dart';
