@@ -8,7 +8,6 @@ class NLTour extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'NLTour',
       theme: ThemeData(
         textSelectionColor: Color(0xFF008fe5),

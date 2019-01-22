@@ -49,7 +49,21 @@ class TourController {
     final client = Client();
 
     return await client
-        .post(TourUrl.crud, headers: DefaultForm.defaultHeaders, body: json.encode(tour))
+        .post(TourUrl.travelerTour, headers: DefaultForm.defaultHeaders, body: json.encode(tour))
+        .then((response) {
+      if (response.statusCode < 200 && response.statusCode >= 400) {
+        return null;
+      } else {
+        return Tour.fromJson(json.decode(response.body));
+      }
+    });
+  }
+
+  Future<Tour> updateTour(Tour tour) async {
+    final client = Client();
+
+    return await client
+        .put(TourUrl.crud, headers: DefaultForm.defaultHeaders, body: json.encode(tour))
         .then((response) {
       if (response.statusCode < 200 && response.statusCode >= 400) {
         return null;

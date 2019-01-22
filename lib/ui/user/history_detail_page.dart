@@ -5,6 +5,7 @@ import 'package:nltour_traveler/controller/traveler_controller.dart';
 import 'package:nltour_traveler/model/collaborator/collaborator.dart';
 import 'package:nltour_traveler/model/collaborator/type.dart';
 import 'package:nltour_traveler/model/tour/tour.dart';
+import 'package:nltour_traveler/ui/payment_detail_page.dart';
 import 'package:nltour_traveler/ui/user/mesage_page.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
@@ -182,27 +183,40 @@ class HistoryDetailPage extends StatelessWidget {
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
+                                !tour.paid
+                                    ? NLSimpleRoundedButton(
+                                        onPressed: () {
+                                          goToPayment(context, tour);
+                                        },
+                                        btnWidth: 100,
+                                        btnHeight: 30,
+                                        backgroundColor: Color(0xFF3eb43e),
+                                        roundColor: Color(0xFF3eb43e),
+                                        textColor: Colors.white,
+                                        btnText: 'Pay For Tour',
+                                      )
+                                    : Container(),
                                 NLSimpleRoundedButton(
                                   onPressed: () {
                                     goToMessage(context, tour.tourGuide);
                                   },
-                                  btnWidth: 120,
+                                  btnWidth: 100,
                                   btnHeight: 30,
                                   backgroundColor: Color(0xFF008fe5),
                                   roundColor: Color(0xFF008fe5),
                                   textColor: Colors.white,
-                                  btnText: 'Message Guide',
+                                  btnText: 'Message',
                                 ),
                                 NLSimpleRoundedButton(
                                   onPressed: () {
                                     cancelTour(context);
                                   },
-                                  btnWidth: 120,
+                                  btnWidth: 100,
                                   btnHeight: 30,
                                   backgroundColor: Colors.white,
                                   roundColor: Color(0xFF008fe5),
                                   textColor: Color(0xFF008fe5),
-                                  btnText: 'Cancel Tour',
+                                  btnText: 'Cancel',
                                 ),
                               ],
                             )
@@ -477,7 +491,7 @@ class HistoryDetailPage extends StatelessWidget {
     return '';
   }
 
-  Future goToMessage(BuildContext context, Collaborator collborator) async {
+  Future goToMessage(BuildContext context, Collaborator collaborator) async {
     final prefs = await SharedPreferences.getInstance();
     String myEmail = prefs.getString('email');
     TravellerController controller = TravellerController();
@@ -487,7 +501,7 @@ class HistoryDetailPage extends StatelessWidget {
         MaterialPageRoute(
             builder: (context) => MessagePage(
                   traveler: data,
-                  collaborator: collborator,
+                  collaborator: collaborator,
                 )),
       );
     });
@@ -515,5 +529,16 @@ class HistoryDetailPage extends StatelessWidget {
     await controller.cancelTour(tour.id);
     Navigator.of(context).pop();
     Navigator.of(context).pop();
+  }
+
+  void goToPayment(BuildContext context, Tour tour) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentDetailPage(
+              tour: tour,
+            ),
+      ),
+    );
   }
 }

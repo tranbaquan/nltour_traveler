@@ -74,7 +74,7 @@ class TravellerController {
     };
 
     return await client
-        .put(TravelerUrl.password, headers: headers)
+        .put(TravelerUrl.otp, headers: headers)
         .then((response) {
       if (response.statusCode < 200 || response.statusCode >= 400) {
         return null;

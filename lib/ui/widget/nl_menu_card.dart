@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nltour_traveler/controller/tour_controller.dart';
+import 'package:nltour_traveler/model/tour/tour.dart';
 import 'package:nltour_traveler/supporter/database/database.dart';
 import 'package:nltour_traveler/utils/session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speech_bubble/speech_bubble.dart';
 
 class NLMenuCard extends StatefulWidget {
   @override
@@ -10,7 +13,8 @@ class NLMenuCard extends StatefulWidget {
   }
 }
 
-class _NLMenuCardState extends State<NLMenuCard> with AutomaticKeepAliveClientMixin {
+class _NLMenuCardState extends State<NLMenuCard>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     return _buildDrawer(context);
@@ -215,6 +219,66 @@ class _NLMenuCardState extends State<NLMenuCard> with AutomaticKeepAliveClientMi
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: choices.map((option) {
+          if (option.title == 'Payment') {
+            return Container(
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: GestureDetector(
+                            child: Text(
+                              option.title,
+                              style: TextStyle(
+                                color: Color(0x00ff444444),
+                                fontFamily: 'Semilight',
+                                fontSize: 14,
+                              ),
+                            ),
+                            onTap: () {
+                              option.onTap(context);
+                            },
+                          ),
+                        ),
+                        SpeechBubble(
+                          nipLocation: NipLocation.LEFT,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              FutureBuilder(
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Text(
+                                      snapshot.data.toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 7.0,
+                                      ),
+                                    );
+                                  }
+                                  return Container();
+                                },
+                                future: countNotPayTours(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0x00ffcfcfcf),
+                    indent: 0,
+                  ),
+                ],
+              ),
+            );
+          }
           return Container(
             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
             child: Column(
@@ -251,6 +315,24 @@ class _NLMenuCardState extends State<NLMenuCard> with AutomaticKeepAliveClientMi
 
   @override
   bool get wantKeepAlive => true;
+
+  Future<int> countNotPayTours() async {
+    return await getMyTours();
+  }
+
+  Future<int> getMyTours() async {
+    var tourController = TourController();
+    int count = 0;
+    final prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('email');
+    List<Tour> tours = await tourController.getMyTour(email);
+    for (Tour tour in tours) {
+      if (!tour.paid && tour.tourGuide != null) {
+        count++;
+      }
+    }
+    return count;
+  }
 }
 
 class Option {
@@ -314,47 +396,3 @@ List<Option> choices = <Option>[
     },
   ),
 ];
-
-
-
-//          Container(
-//            child: Row(
-//              children: <Widget>[
-//                Expanded(
-//                  child: GestureDetector(
-//                    child: Text(
-//                      choices[2].title,
-//                      style: TextStyle(
-//                        color: Color(0x00ff444444),
-//                        fontFamily: 'Semilight',
-//                        fontSize: 14,
-//                      ),
-//                    ),
-//                    onTap: () {
-//                      onTap(2);
-//                    },
-//                  ),
-//                ),
-//                SpeechBubble(
-//                  nipLocation: NipLocation.LEFT,
-//                  child: Row(
-//                    mainAxisSize: MainAxisSize.min,
-//                    children: <Widget>[
-//                      Text(
-//                        "1",
-//                        style: TextStyle(
-//                          color: Colors.white,
-//                          fontSize: 7.0,
-//                        ),
-//                      ),
-//                    ],
-//                  ),
-//                ),
-//              ],
-//            ),
-//            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
-//          ),
-//          Divider(
-//            color: Color(0x00ffcfcfcf),
-//            indent: 0.0,
-//          ),

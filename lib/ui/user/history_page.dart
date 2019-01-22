@@ -3,7 +3,6 @@ import 'package:nltour_traveler/controller/tour_controller.dart';
 import 'package:nltour_traveler/model/tour/tour.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 import 'package:nltour_traveler/ui/widget/nl_card.dart';
-import 'package:nltour_traveler/ui/widget/nl_menu_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -57,6 +56,5 @@ class HistoryPageState extends State<HistoryPage> {
     }
     return res;
   }
-
 
 }

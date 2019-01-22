@@ -84,6 +84,7 @@ class ChangePassPageState extends State<ChangePassPage> {
   void _changePass() async {
     var controller = TravellerController();
     var deviceInfo = await DeviceId.getID;
+    print(deviceInfo);
     final prefs = await SharedPreferences.getInstance();
     String email = prefs.get('email');
     controller.changePasswordByOtp(email, _pass.text, deviceInfo).then((data) {

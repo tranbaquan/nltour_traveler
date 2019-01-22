@@ -141,10 +141,12 @@ class ForgotPageState extends State<ForgotPage> {
   void _validateOTP() async {
     var controller = OTPController();
     _otp.identifier = await DeviceId.getID;
+    _otp.otp = _otpController.text;
     final prefs = await SharedPreferences.getInstance();
     controller.validateOTP(_otp).then((b) {
       if (b) {
         prefs.setString('email', _email.text);
+        Navigator.of(context).pop();
         Navigator.of(context).pushNamed('/changepass');
       } else {
         Navigator.of(context).pop();

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:http/http.dart' as http;
+import 'package:nltour_traveler/controller/tour_controller.dart';
+import 'package:nltour_traveler/model/tour/tour.dart';
 import 'package:nltour_traveler/ui/widget/nl_app_bar.dart';
 import 'package:nltour_traveler/ui/widget/nl_button.dart';
 import 'package:nltour_traveler/utils/dialog.dart';
@@ -15,6 +18,10 @@ String paystackPublicKey = 'pk_test_db4b8fa81b59123fb8f7d84eb36281dd680ed2e1';
 String paystackSecretKey = 'sk_test_8f82014842a14ebeaa1fce408ca5d1f6f02a576a';
 
 class PaymentDetailPage extends StatefulWidget {
+  final Tour tour;
+
+  const PaymentDetailPage({Key key, this.tour}) : super(key: key);
+
   @override
   PaymentDetailPageState createState() {
     return new PaymentDetailPageState();
@@ -63,7 +70,7 @@ class PaymentDetailPageState extends State<PaymentDetailPage> {
                   ),
                 ),
                 Text(
-                  '\$150',
+                  '\$' + widget.tour.price.toString(),
                   style: TextStyle(
                     fontFamily: 'Normal',
                     fontWeight: FontWeight.bold,
@@ -197,8 +204,8 @@ class PaymentDetailPageState extends State<PaymentDetailPage> {
   _handleCheckout() async {
     _formKey.currentState.save();
     Charge charge = Charge()
-      ..amount = 1500000
-      ..email = 'tranbaquan.tbq@gmail.com'
+      ..amount = widget.tour.price.round() * 1000
+      ..email = widget.tour.traveler.email
       ..card = _getCardFromUI();
 
     NLDialog.showLoading(context);
@@ -211,8 +218,15 @@ class PaymentDetailPageState extends State<PaymentDetailPage> {
 
     CheckoutResponse response = await PaystackPlugin.checkout(context,
         method: _method, charge: charge, fullscreen: false);
-
-
+    NLDialog.showLoading(context);
+    if(response.status) {
+      Tour t = widget.tour;
+      t.paid = true;
+      print(json.encode(t));
+      TourController controller = TourController();
+      await controller.updateTour(t);
+    }
+    Navigator.pop(context);
     _updateStatus(response.reference, '$response');
   }
 
@@ -315,13 +329,16 @@ class PaymentDetailPageState extends State<PaymentDetailPage> {
   }
 
   _showMessage(String message,
-      [Duration duration = const Duration(seconds: 4)]) {
+      [Duration duration = const Duration(seconds: 10)]) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
       content: new Text(message),
       duration: duration,
       action: new SnackBarAction(
           label: 'CLOSE',
-          onPressed: () => _scaffoldKey.currentState.removeCurrentSnackBar()),
+          onPressed: () {
+            _scaffoldKey.currentState.removeCurrentSnackBar();
+            Navigator.pushReplacementNamed(context, '/home');
+          }),
     ));
   }
 

@@ -17,8 +17,7 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class _HomePageState extends State<HomePage>
-    with AutomaticKeepAliveClientMixin {
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +26,6 @@ class _HomePageState extends State<HomePage>
       body: buildContent(context),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
   Widget buildContent(BuildContext context) {
     final widget1 = Container(
